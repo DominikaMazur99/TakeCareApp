@@ -8,7 +8,7 @@ import World from "../../icons/WorldIcon.svg";
 
 const NavbarComponent: React.FC = () => {
     return (
-        <div className="top-0 w-full h-auto border-b-[1px] border-customGrey px-12 py-6">
+        <div className="top-0 w-full h-[96px] border-b-[1px] border-customGrey px-12 py-6">
             <div className="grid grid-cols-[60%,40%] items-end">
                 <div>
                     <Logo />
@@ -24,11 +24,11 @@ const NavbarComponent: React.FC = () => {
                         name="Umów wizytę"
                         icon={<Calender className="text-white" />}
                     />
-                    <SelectComponent
+                    {/* <SelectComponent
                         icon={<World />}
                         arrowColor="#0068FA"
                         value="PL"
-                    />
+                    /> */}
                 </div>
             </div>
         </div>
