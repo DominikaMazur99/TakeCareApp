@@ -1,5 +1,6 @@
 import NavbarComponent from "../customComponents/bars/NavbarComonent";
 import SideBarComponent from "../customComponents/bars/SideBarComponent";
+import Breadcrumbs from "../customComponents/ui/Breadcrubms";
 
 export default function SectionLayout({
     children,
@@ -11,7 +12,10 @@ export default function SectionLayout({
             <NavbarComponent />
             <div className="grid grid-cols-[20%,60%,20%] p-8 bg-[#E4E5E7]">
                 <SideBarComponent />
-                <div className="w-full px-8 items-center">{children}</div>
+                <div className="w-full px-8 items-center">
+                    <Breadcrumbs />
+                    {children}
+                </div>
                 <div>3</div>
             </div>
         </div>
