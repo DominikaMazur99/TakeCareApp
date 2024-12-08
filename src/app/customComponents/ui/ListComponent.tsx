@@ -21,7 +21,7 @@ const ListComponent: React.FC<ListComponentProps> = ({ elements }) => {
                 <li key={item.name}>
                     <Link href={item.path}>
                         <div
-                            className={`flex items-center gap-2 cursor-pointer rounded-md transition-colors duration-200${
+                            className={`flex items-center gap-2 cursor-pointer rounded-md transition-colors duration-200 ${
                                 selectedSection === item.name
                                     ? "text-[#0068FA]"
                                     : "text-gray-700"
