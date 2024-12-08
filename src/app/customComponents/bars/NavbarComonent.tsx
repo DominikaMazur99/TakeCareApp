@@ -3,8 +3,8 @@ import Logo from "../../icons/appIcon.svg";
 import ButtonComponent from "../ui/ButtonComponent";
 import Calender from "../../icons/CalenderIcon.svg";
 import Spider from "../../icons/SpiderIcon.svg";
-import SelectComponent from "../ui/SelectComponent";
-import World from "../../icons/WorldIcon.svg";
+// import SelectComponent from "../ui/SelectComponent";
+// import World from "../../icons/WorldIcon.svg";
 
 const NavbarComponent: React.FC = () => {
     return (

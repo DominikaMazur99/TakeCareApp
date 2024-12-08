@@ -1,58 +1,96 @@
 "use client";
 
 import React from "react";
-import { useSidebar } from "@/hooks/SidebarContext";
+import Footer from "../../icons/sidebar/FooterIcon.svg";
 
 // Import ikon
-import HomeIcon from "../../icons/sidebar/HomeIcon.svg";
-import HeadphonesIcon from "../../icons/sidebar/HeadphonesIcon.svg";
-import HospitalIcon from "../../icons/sidebar/HospitalIcon.svg";
-import BagIcon from "../../icons/sidebar/BagIcon.svg";
-import OpinionIcon from "../../icons/sidebar/OpinionIcon.svg";
-import NoteIcon from "../../icons/sidebar/NoteIcon.svg";
-import CalendarIcon from "../../icons/sidebar/CalenderIcon.svg";
-import RaportIcon from "../../icons/sidebar/RaportIcon.svg";
-import SettingsIcon from "../../icons/sidebar/SettingsIcon.svg";
-import FaqIcon from "../../icons/sidebar/FaqIcon.svg";
-import LogoutIcon from "../../icons/sidebar/LogoutIcon.svg";
+import HomeIcon from "../../icons/sidebar/HomeIcon";
+import HeadphonesIcon from "../../icons/sidebar/HeadphonesIcon";
+import HospitalIcon from "../../icons/sidebar/HospitalIcon";
+import BagIcon from "../../icons/sidebar/BagIcon";
+import OpinionIcon from "../../icons/sidebar/OpinionIcon";
+import NoteIcon from "../../icons/sidebar/NoteIcon";
+import CalendarIcon from "../../icons/sidebar/CalenderIcon";
+import RaportIcon from "../../icons/sidebar/RaportIcon";
+import SettingsIcon from "../../icons/sidebar/SettingsIcon";
+import FaqIcon from "../../icons/sidebar/FaqIcon";
+import LogoutIcon from "../../icons/sidebar/LogoutIcon";
+import ListComponent from "../ui/ListComponent";
+import UserCard from "../ui/UserCard";
 
 const SideBarComponent: React.FC = () => {
-    const { selectedSection, setSelectedSection } = useSidebar();
-
     const menuItems = [
-        { name: "Strona główna", icon: <HomeIcon /> },
-        { name: "Wizyty online", icon: <HeadphonesIcon /> },
-        { name: "Wizyty domowe", icon: <HospitalIcon /> },
-        { name: "Wizyty stacjonarne", icon: <BagIcon /> },
-        { name: "Druga opinia", icon: <OpinionIcon /> },
-        { name: "Dziennik aktywności", icon: <NoteIcon /> },
-        { name: "Kalendarz specjalistów", icon: <CalendarIcon /> },
-        { name: "Raporty", icon: <RaportIcon /> },
-        { name: "Ustawienia", icon: <SettingsIcon /> },
-        { name: "FAQ", icon: <FaqIcon /> },
-        { name: "Wyloguj się", icon: <LogoutIcon /> },
+        { name: "Strona główna", icon: <HomeIcon />, path: "/" },
+        {
+            name: "Wizyty online",
+            icon: <HeadphonesIcon />,
+            path: "/section/online",
+        },
+        {
+            name: "Wizyty domowe",
+            icon: <HospitalIcon />,
+            path: "/section/home",
+        },
+        {
+            name: "Wizyty stacjonarne",
+            icon: <BagIcon />,
+            path: "/section/stacionary",
+        },
+        {
+            name: "Druga opinia",
+            icon: <OpinionIcon />,
+            path: "/section/second",
+        },
+        {
+            name: "Dziennik aktywności",
+            icon: <NoteIcon />,
+            path: "/section/activities",
+        },
+        {
+            name: "Kalendarz specjalistów",
+            icon: <CalendarIcon />,
+            path: "/section/calendar",
+        },
+        { name: "Raporty", icon: <RaportIcon />, path: "/section/raports" },
+    ];
+    const settingsItems = [
+        {
+            name: "Ustawienia",
+            icon: <SettingsIcon />,
+            path: "/section/settings",
+        },
+        { name: "FAQ", icon: <FaqIcon />, path: "/section/faq" },
+    ];
+    const logoutItems = [
+        { name: "Wyloguj się", icon: <LogoutIcon />, path: "/section/logout" },
     ];
 
     return (
-        <div className="w-[16rem] h-full bg-white shadow-md p-6 rounded-md">
-            <ul className="space-y-2">
-                {menuItems.map((item) => (
-                    <li
-                        key={item.name}
-                        className={`flex items-center gap-4 cursor-pointer p-4 rounded-md transition-colors duration-200 ${
-                            selectedSection === item.name
-                                ? "bg-blue-100 text-blue-500"
-                                : "hover:bg-gray-100 text-gray-700"
-                        }`}
-                        onClick={() => setSelectedSection(item.name)}
-                    >
-                        <span className="w-6 h-6 flex-shrink-0">
-                            {item.icon}
-                        </span>
-                        <span className="text-sm font-medium">{item.name}</span>
-                    </li>
-                ))}
-            </ul>
+        <div className="flex flex-col h-full justify-between">
+            <div className="w-[16rem] bg-white shadow-md p-6 rounded-md space-y-4">
+                <div>
+                    <UserCard
+                        name={"Joe Doe"}
+                        job={"Operator"}
+                        email={"joe@doe.pl"}
+                    />
+                    <div className="my-4 h-px bg-gray-300"></div>
+                </div>
+                <div>
+                    <ListComponent elements={menuItems} />
+                    <div className="my-4 h-px bg-gray-300"></div>
+                </div>
+                <div>
+                    <ListComponent elements={settingsItems} />
+                    <div className="my-4 h-px bg-gray-300"></div>
+                </div>
+                <div>
+                    <ListComponent elements={logoutItems} />
+                </div>
+            </div>
+            <div className="flex justify-start">
+                <Footer />
+            </div>
         </div>
     );
 };
