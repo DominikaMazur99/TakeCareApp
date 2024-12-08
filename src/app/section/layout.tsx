@@ -8,11 +8,11 @@ export default function SectionLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="w-screen h-screen overflow-hidden grid grid-rows-[auto,1fr]">
+        <div className="w-screen h-screen grid grid-rows-[auto,1fr]">
             <NavbarComponent />
-            <div className="grid grid-cols-[20%,60%,20%] p-8 bg-[#E4E5E7]">
+            <div className="grid grid-cols-[1fr,3fr,1fr] gap-4 bg-[#E4E5E7] p-8 overflow-hidden h-full">
                 <SideBarComponent />
-                <div className="w-full px-8 items-center">
+                <div className="w-full px-8 items-center h-[calc(100%-96px)] overflow-auto">
                     <Breadcrumbs />
                     {children}
                 </div>

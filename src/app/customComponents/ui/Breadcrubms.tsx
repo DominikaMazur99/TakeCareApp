@@ -15,17 +15,19 @@ import { menuItems, logoutItems, settingsItems } from "../helpers/data";
 const Breadcrumbs: React.FC = () => {
     const pathname = usePathname();
 
-    const breadcrumbs = pathname
-        .split("/")
-        .filter(Boolean)
-        .map((crumb, index) => ({
-            name: crumb,
-            path: `/${pathname
-                .split("/")
-                .slice(1, index + 2)
-                .join("/")}`,
-        }))
-        .filter((el) => el.name !== "section");
+    const breadcrumbs =
+        pathname &&
+        pathname
+            .split("/")
+            .filter(Boolean)
+            .map((crumb, index) => ({
+                name: crumb,
+                path: `/${pathname
+                    .split("/")
+                    .slice(1, index + 2)
+                    .join("/")}`,
+            }))
+            .filter((el) => el.name !== "section");
 
     const allOptions = [...menuItems, ...logoutItems, ...settingsItems];
     const selectedOption = allOptions.find(
