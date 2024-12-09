@@ -9,7 +9,7 @@ import { logoutItems, menuItems, settingsItems } from "../helpers/data";
 const SideBarComponent: React.FC = () => {
     return (
         <div className="flex flex-col h-[calc(100vh-150px)]">
-            <div className="flex-1 flex flex-col justify-between bg-white shadow-md p-6 rounded-md overflow-auto h-[300px]">
+            <div className="flex-1 flex flex-col justify-between bg-white shadow-md p-6 rounded-md overflow-auto">
                 <div>
                     <UserCard
                         name={"Joe Doe"}
@@ -30,7 +30,7 @@ const SideBarComponent: React.FC = () => {
                     <ListComponent elements={logoutItems} />
                 </div>
             </div>
-            <div className="flex-shrink-0  py-4">
+            <div className="flex-shrink-0 py-4">
                 <Footer />
             </div>
         </div>
