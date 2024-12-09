@@ -1,14 +1,21 @@
 import NavbarComponent from "./customComponents/bars/NavbarComonent";
 import SideBarComponent from "./customComponents/bars/SideBarComponent";
+import Breadcrumbs from "./customComponents/ui/Breadcrubms";
 
 export default function Home() {
     return (
         <div className="w-screen h-screen overflow-hidden grid grid-rows-[auto,1fr]">
             <NavbarComponent />
-            <div className="grid grid-cols-[20%,60%,20%] p-8 bg-[#E4E5E7] w-full h-full over">
-                <SideBarComponent />
-                <div>strona glowna</div>
-                <div>3</div>
+            <div className="grid grid-cols-[1fr,3fr,1fr] gap-4 bg-[#E4E5E7] overflow-hidden h-full">
+                <div className="p-8">
+                    <SideBarComponent />
+                </div>
+                <div className="w-full px-8 items-center h-full overflow-auto">
+                    <div className="py-8">
+                        <Breadcrumbs />
+                    </div>
+                </div>
+                <div className="p-8"></div>
             </div>
         </div>
     );
