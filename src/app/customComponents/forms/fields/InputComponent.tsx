@@ -4,6 +4,7 @@ import React from "react";
 import { useFormContext, Controller } from "react-hook-form";
 
 interface InputProps {
+    id: string;
     name: string;
     label?: string;
     placeholder?: string;
@@ -13,6 +14,7 @@ interface InputProps {
 }
 
 const InputComponent: React.FC<InputProps> = ({
+    id,
     name,
     label,
     placeholder,
@@ -23,7 +25,7 @@ const InputComponent: React.FC<InputProps> = ({
     const { control } = useFormContext();
 
     return (
-        <div className={`flex flex-col gap-1 ${className}`}>
+        <div className={`flex flex-col gap-1 ${className}`} id={id}>
             {label && (
                 <label
                     htmlFor={name}

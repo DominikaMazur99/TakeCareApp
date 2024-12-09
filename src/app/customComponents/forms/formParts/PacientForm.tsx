@@ -5,6 +5,7 @@ import { fetchOptionsFromAPI } from "@/app/helpers/api";
 import TextareaComponent from "../fields/TextareaComponent";
 import DatePickerComponent from "../fields/DatePickerComponent";
 import RadioButtonsComponent from "../fields/RadioButtonsComponent";
+import CheckboxComponent from "../fields/CheckboxComponent";
 
 const PacientForm: React.FC = () => {
     const fetchSymptomsOptions = async () => {
@@ -18,7 +19,7 @@ const PacientForm: React.FC = () => {
         });
     };
     return (
-        <>
+        <div id="patient-section" className="flex flex-col gap-6">
             <h3 className="text-[24px] text-textLabel font-small">Pacjent</h3>
             <RadioButtonsComponent
                 name="age"
@@ -40,14 +41,23 @@ const PacientForm: React.FC = () => {
                 </label>
                 <div className="flex items-center gap-4 w-full">
                     <div className="w-1/2">
-                        <InputComponent name="name" placeholder="Imię" />
+                        <InputComponent
+                            id="pacient-name"
+                            name="name"
+                            placeholder="Imię"
+                        />
                     </div>
                     <div className="w-1/2">
-                        <InputComponent name="surname" placeholder="Nazwisko" />
+                        <InputComponent
+                            id="pacient-surname"
+                            name="surname"
+                            placeholder="Nazwisko"
+                        />
                     </div>
                 </div>
             </div>
             <SelectComponent
+                id="symptoms"
                 name="Symptoms"
                 label="Objawy"
                 fetchOptions={fetchSymptomsOptions}
@@ -64,6 +74,7 @@ const PacientForm: React.FC = () => {
                 }}
             />{" "}
             <InputComponent
+                id="passport"
                 name="passport"
                 placeholder="Paszport (pamietej zeby to poprawic)"
             />
@@ -76,6 +87,7 @@ const PacientForm: React.FC = () => {
                 </label>
                 <div>
                     <SelectComponent
+                        id="country"
                         name="country"
                         placeholder="Kraj"
                         fetchOptions={fetchCountriesOptions}
@@ -83,17 +95,26 @@ const PacientForm: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-4 w-full">
                     <div className="w-1/2">
-                        <InputComponent name="street" placeholder="Ulica" />
+                        <InputComponent
+                            id="street"
+                            name="street"
+                            placeholder="Ulica"
+                        />
                     </div>
                     <div className="w-1/2">
                         <InputComponent
+                            id="local-number"
                             name="local"
                             placeholder="Numer lokalu"
                         />
                     </div>
                 </div>
             </div>
-        </>
+            <CheckboxComponent
+                name="difadress"
+                label="Wizyta ma się odbyć na inny adres"
+            />
+        </div>
     );
 };
 

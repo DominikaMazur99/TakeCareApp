@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select"; // Replace with your actual Select component import
 
 interface SelectProps {
+    id: string;
     name: string;
     label?: string;
     placeholder?: string;
@@ -21,6 +22,7 @@ interface SelectProps {
 }
 
 const SelectComponent: React.FC<SelectProps> = ({
+    id,
     name,
     label,
     placeholder = "Select an option",
@@ -52,7 +54,7 @@ const SelectComponent: React.FC<SelectProps> = ({
     }, [fetchOptions]);
 
     return (
-        <div className={`flex flex-col gap-1 ${className} `}>
+        <div className={`flex flex-col gap-1 ${className} `} id={id}>
             {label && (
                 <label
                     htmlFor={name}

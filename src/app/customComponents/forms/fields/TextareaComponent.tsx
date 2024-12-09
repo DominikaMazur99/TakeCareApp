@@ -4,6 +4,7 @@ import React from "react";
 import { useFormContext, Controller } from "react-hook-form";
 
 interface TextareaProps {
+    id: string;
     name: string;
     label?: string;
     placeholder?: string;
@@ -13,6 +14,7 @@ interface TextareaProps {
 }
 
 const TextareaComponent: React.FC<TextareaProps> = ({
+    id,
     name,
     label,
     placeholder,

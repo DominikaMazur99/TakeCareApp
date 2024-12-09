@@ -1,5 +1,7 @@
 import NavbarComponent from "../customComponents/bars/NavbarComonent";
 import SideBarComponent from "../customComponents/bars/SideBarComponent";
+import { fieldsToAccordion } from "../customComponents/helpers/data";
+import AccordionComponent from "../customComponents/ui/AccordionComponent";
 import Breadcrumbs from "../customComponents/ui/Breadcrubms";
 
 export default function SectionLayout({
@@ -7,6 +9,15 @@ export default function SectionLayout({
 }: {
     children: React.ReactNode;
 }) {
+    // Generowanie `accordionData` z `fields`
+    const accordionData = fieldsToAccordion.map((section) => ({
+        title: section.sectionTitle,
+        subItems: section.fields.map((field) => ({
+            title: field.fieldLabel,
+            targetId: field.fieldId,
+        })),
+    }));
+
     return (
         <div className="w-screen h-screen grid grid-rows-[auto,1fr]">
             <NavbarComponent />
@@ -20,7 +31,9 @@ export default function SectionLayout({
                         {children}
                     </div>
                 </div>
-                <div>3</div>
+                <div className="p-8">
+                    <AccordionComponent data={accordionData} />
+                </div>
             </div>
         </div>
     );

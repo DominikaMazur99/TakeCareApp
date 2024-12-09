@@ -37,12 +37,18 @@ const HomeVisitForm: React.FC = () => {
             >
                 <VisitForm />
                 <PacientForm />
+                <button
+                    type="button"
+                    className="text-blue-500 bg-white border-blue-500 border-[1px] px-4 py-2 rounded-md"
+                >
+                    Dodaj pacjenta
+                </button>
 
                 <button
                     type="submit"
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                    className="bg-blue-500 border-blue-500 border-[1px] text-white px-4 py-2 rounded-md"
                 >
-                    Submit
+                    Dalej &gt;
                 </button>
             </form>
         </FormProvider>
