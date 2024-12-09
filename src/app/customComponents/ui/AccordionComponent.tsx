@@ -48,7 +48,8 @@ const AccordionComponent: React.FC<AccordionComponentProps> = ({
                 <AccordionPrimitive.Header className="flex">
                     <AccordionPrimitive.Trigger
                         className={cn(
-                            "flex flex-1 items-center justify-between py-4 px-4 text-sm text-[#242628] font-[500] transition-all hover:underline text-left [&[data-state=open]>svg]:rotate-180"
+                            "flex flex-1 items-center justify-between py-4 px-4 text-sm font-[500] transition-all hover:underline text-left [&[data-state=open]>svg]:rotate-180",
+                            "data-[state=open]:text-blue-600 data-[state=open]:[&>svg]:text-blue-600"
                         )}
                     >
                         Przejdź do
