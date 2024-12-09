@@ -35,10 +35,9 @@ const AccordionComponent: React.FC<AccordionComponentProps> = ({
 
     return (
         <AccordionPrimitive.Root
-            type="single"
-            collapsible
+            type="multiple" // Allows multiple sections to be expanded at the same time
             className={cn(
-                "w-full bg-white rounded-md shadow-md p-2",
+                "w-full min-w-[190px] bg-white rounded-md shadow-md p-1",
                 className
             )}
         >
@@ -56,11 +55,9 @@ const AccordionComponent: React.FC<AccordionComponentProps> = ({
                         <ChevronDown className="h-4 w-4 shrink-0 text-sm text-[#242628] font-[500] transition-transform duration-200" />
                     </AccordionPrimitive.Trigger>
                 </AccordionPrimitive.Header>
-                <div className=" h-px bg-gray-300"></div>
                 <AccordionPrimitive.Content className="overflow-hidden text-sm text-[#242628] font-[500] data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
                     <AccordionPrimitive.Root
-                        type="single"
-                        collapsible
+                        type="multiple" // Allows multiple subsections to be expanded at the same time
                         className="pl-4"
                     >
                         {data.map((item, index) => (
@@ -72,7 +69,7 @@ const AccordionComponent: React.FC<AccordionComponentProps> = ({
                                 <AccordionPrimitive.Header className="flex">
                                     <AccordionPrimitive.Trigger
                                         className={cn(
-                                            "flex flex-1 items-center justify-between py-4 text-sm text-[#242628] font-[500] transition-all hover:underline text-left [&[data-state=open]>svg]:rotate-180"
+                                            "flex flex-1 items-center justify-between py-4 px-4 text-sm text-[#242628] font-[500] transition-all hover:underline text-left [&[data-state=open]>svg]:rotate-180"
                                         )}
                                     >
                                         {item.title}
