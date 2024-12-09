@@ -12,7 +12,8 @@ interface ButtonComponentProps {
         | null
         | undefined
         | "error"
-        | "basic";
+        | "basic"
+        | "calendar";
     name: string;
     icon?: React.ReactNode;
 }

@@ -6,6 +6,7 @@ import InputComponent from "./fields/InputComponent";
 import { fetchOptionsFromAPI } from "@/app/helpers/api";
 import SelectComponent from "./fields/SelectComponent";
 import VisitForm from "./formParts/VisitForm";
+import PacientForm from "./formParts/PacientForm";
 
 interface FormData {
     numberOfIssue: string;
@@ -35,6 +36,7 @@ const HomeVisitForm: React.FC = () => {
                 className="border border-gray-300 rounded-md p-10 gap-6 flex flex-col bg-white w-full h-full relative"
             >
                 <VisitForm />
+                <PacientForm />
 
                 <button
                     type="submit"

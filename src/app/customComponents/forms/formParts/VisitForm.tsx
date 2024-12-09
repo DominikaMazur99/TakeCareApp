@@ -3,13 +3,9 @@ import SelectComponent from "../fields/SelectComponent";
 import InputComponent from "../fields/InputComponent";
 import { fetchOptionsFromAPI } from "@/app/helpers/api";
 import TextareaComponent from "../fields/TextareaComponent";
+import DatePickerComponent from "../fields/DatePickerComponent";
 
 const VisitForm: React.FC = () => {
-    const fetchCategoryOptions = async () => {
-        return await fetchOptionsFromAPI({
-            url: "/api/categories",
-        });
-    };
     const fetchVisitsOptions = async () => {
         return await fetchOptionsFromAPI({
             url: "/api/visits",
@@ -58,13 +54,12 @@ const VisitForm: React.FC = () => {
                 rules={{ required: "Pole wymagane." }}
                 fetchOptions={fetchSpecializationOptions}
             />
-            <SelectComponent
+
+            <DatePickerComponent
                 name="Visit Date"
                 label="Data wizyty"
                 placeholder="Data wizyty"
                 rules={{ required: "Pole wymagane." }}
-                fetchOptions={fetchCategoryOptions}
-                defaultValue={"Jak najszybciej"}
             />
             <div>
                 <label className="text-base text-textLabel font-hight">
