@@ -48,7 +48,6 @@ const VisitForm: React.FC = () => {
                 label="Rodzaj wizyty"
                 rules={{ required: "Pole wymagane." }}
                 fetchOptions={fetchVisitsOptions}
-                defaultValue={"Wizyta domowa"}
             />
             <SelectComponent
                 id="specialization"

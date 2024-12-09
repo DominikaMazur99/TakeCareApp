@@ -53,16 +53,21 @@ const MultiSelectComponent: React.FC<MultiSelectProps> = ({
     };
 
     const customStyles = {
-        control: (provided: any) => ({
+        control: (provided: any, state: any) => ({
             ...provided,
             border: "none",
+            borderBottom: "1px solid #d1d5db",
+            borderRadius: "0",
+            backgroundColor: "transparent",
             boxShadow: "none",
-            backgroundColor: "transparent", // Light gray background
-            borderRadius: "0.375rem", // Rounded corners
-            padding: "0.25rem", // Padding inside the control
-            "&:hover": {
-                borderColor: "#93c5fd", // Blue on hover
-            },
+            padding: "0.25rem 0",
+            color: "#6b7280", // textHover color
+            ...(state.isFocused && {
+                borderBottom: "1px solid #2563eb",
+            }),
+        }),
+        indicatorSeparator: () => ({
+            display: "none",
         }),
         option: (provided: any, state: any) => ({
             ...provided,
@@ -111,7 +116,6 @@ const MultiSelectComponent: React.FC<MultiSelectProps> = ({
                 onChange={handleChange}
                 styles={customStyles} // Apply custom styles
             />
-            <div className=" h-px bg-gray-300"></div>
         </div>
     );
 };

@@ -2,11 +2,10 @@ import React from "react";
 import SelectComponent from "../fields/SelectComponent";
 import InputComponent from "../fields/InputComponent";
 import { fetchOptionsFromAPI } from "@/app/helpers/api";
-import TextareaComponent from "../fields/TextareaComponent";
-import DatePickerComponent from "../fields/DatePickerComponent";
 import RadioButtonsComponent from "../fields/RadioButtonsComponent";
 import CheckboxComponent from "../fields/CheckboxComponent";
 import dynamic from "next/dynamic";
+import RadioButtonsInOne from "../fields/RadioButtonsInOne";
 
 const PacientForm: React.FC = () => {
     const fetchSymptomsOptions = async () => {
@@ -68,11 +67,8 @@ const PacientForm: React.FC = () => {
                 name="Symptoms"
                 label="Objawy"
                 fetchOptions={fetchSymptomsOptions}
-                onChange={() => {
-                    console.log("aa");
-                }}
             />
-            <RadioButtonsComponent
+            <RadioButtonsInOne
                 name="document"
                 label="Dokument"
                 options={[
@@ -82,7 +78,7 @@ const PacientForm: React.FC = () => {
                 rules={{
                     required: "Wybór jest wymagany.",
                 }}
-            />{" "}
+            />
             <InputComponent
                 id="passport"
                 name="passport"

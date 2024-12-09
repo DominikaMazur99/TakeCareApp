@@ -1,34 +1,26 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useFormContext, Controller } from "react-hook-form";
-import {
-    Select,
-    SelectTrigger,
-    SelectValue,
-    SelectContent,
-    SelectItem,
-} from "@/components/ui/select";
+import Select from "react-select";
+import { Controller, useFormContext } from "react-hook-form";
 
 interface SelectProps {
     id: string;
     name: string;
     label?: string;
     placeholder?: string;
-    rules?: object;
-    className?: string;
     fetchOptions: () => Promise<{ label: string; value: string | number }[]>;
-    defaultValue?: string | number;
+    rules?: object;
+    defaultValue?: { label: string; value: string | number };
 }
 
 const SelectComponent: React.FC<SelectProps> = ({
     id,
     name,
     label,
-    placeholder = "Select an option",
-    rules,
-    className = "",
+    placeholder = "Wybierz opcję",
     fetchOptions,
+    rules,
     defaultValue,
 }) => {
     const { control } = useFormContext();
@@ -53,12 +45,48 @@ const SelectComponent: React.FC<SelectProps> = ({
         fetchData();
     }, [fetchOptions]);
 
+    const customStyles = {
+        control: (provided: any, state: any) => ({
+            ...provided,
+            border: "none",
+            borderBottom: "1px solid #d1d5db",
+            borderRadius: "0",
+            backgroundColor: "transparent",
+            boxShadow: "none",
+            padding: "0.25rem 0",
+            color: "#6b7280", // textHover color
+            ...(state.isFocused && {
+                borderBottom: "1px solid #2563eb",
+            }),
+        }),
+        valueContainer: (provided: any) => ({
+            ...provided,
+            padding: "0", // Usuń padding wewnętrzny
+        }),
+        singleValue: (provided: any) => ({
+            ...provided,
+            color: "#6b7280", // textHover color
+        }),
+        indicatorSeparator: () => ({
+            display: "none",
+        }),
+        option: (provided: any, state: any) => ({
+            ...provided,
+            backgroundColor: state.isFocused ? "#e0f2fe" : "white",
+            color: state.isSelected ? "white" : "#6b7280", // textHover color
+            "&:hover": {
+                backgroundColor: "#93c5fd",
+                color: "white",
+            },
+        }),
+    };
+
     return (
-        <div className={`flex flex-col gap-1 ${className} `} id={id}>
+        <div className="flex flex-col gap-1">
             {label && (
                 <label
                     htmlFor={name}
-                    className="text-base text-textLabel font-bold"
+                    className="text-base text-textLabel font-hight"
                 >
                     {label}
                 </label>
@@ -67,40 +95,31 @@ const SelectComponent: React.FC<SelectProps> = ({
                 name={name}
                 control={control}
                 rules={rules}
-                defaultValue={defaultValue || options[0]?.value || ""}
-                render={({ field }) => (
-                    <Select
-                        value={field.value}
-                        onValueChange={(value) => field.onChange(value)}
-                    >
-                        <SelectTrigger className="w-full">
-                            <SelectValue placeholder={placeholder} />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {!loading && options.length === 0 && (
-                                <SelectItem value="no-options" disabled>
-                                    No options available
-                                </SelectItem>
+                defaultValue={defaultValue}
+                render={({ field, fieldState }) => (
+                    <div>
+                        <Select
+                            {...field}
+                            id={id}
+                            options={options}
+                            placeholder={placeholder}
+                            isLoading={loading}
+                            value={options.find(
+                                (option) => option.value === field.value
                             )}
-                            {loading ? (
-                                <SelectItem value="loading" disabled>
-                                    Loading...
-                                </SelectItem>
-                            ) : (
-                                options.map((option) => (
-                                    <SelectItem
-                                        key={option.value}
-                                        value={String(option.value)}
-                                    >
-                                        {option.label}
-                                    </SelectItem>
-                                ))
-                            )}
-                        </SelectContent>
-                    </Select>
+                            onChange={(selectedOption) =>
+                                field.onChange(selectedOption?.value)
+                            }
+                            styles={customStyles}
+                        />
+                        {fieldState.error && (
+                            <span className="text-sm text-red-500">
+                                {fieldState.error.message}
+                            </span>
+                        )}
+                    </div>
                 )}
             />
-            <div className="h-px bg-gray-300"></div>
         </div>
     );
 };

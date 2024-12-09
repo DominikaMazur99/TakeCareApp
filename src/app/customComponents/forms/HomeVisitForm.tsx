@@ -10,23 +10,46 @@ import PacientForm from "./formParts/PacientForm";
 
 interface FormData {
     numberOfIssue: string;
-    category: string;
-    lastName: string;
-    email: string;
+    visitType: string;
+    specialization: string;
+    visitDate: string;
+    age: string;
+    name: string;
+    surname: string;
+    document: string;
+    passport: string;
+    country: string;
+    street: string;
+    local: string;
+    difadress: boolean;
 }
 
 const HomeVisitForm: React.FC = () => {
     const methods = useForm<FormData>({
         defaultValues: {
             numberOfIssue: "",
-            category: "",
-            lastName: "",
-            email: "",
+            visitType: "Wizyta domowa",
+            specialization: "",
+            visitDate: "",
+            age: "",
+            name: "",
+            surname: "",
+            document: "",
+            passport: "PESEL",
+            country: "",
+            street: "",
+            local: "",
+            difadress: false,
         },
     });
 
     const onSubmit = (data: FormData) => {
-        console.log(data);
+        console.log("Submit data:", data);
+    };
+
+    const getAllValues = () => {
+        const allValues = methods.getValues(); // Pobieranie danych z obu formularzy
+        console.log("Wszystkie wartości formularza:", allValues);
     };
 
     return (
