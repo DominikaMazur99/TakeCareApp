@@ -9,7 +9,6 @@ export default function SectionLayout({
 }: {
     children: React.ReactNode;
 }) {
-    // Generowanie `accordionData` z `fields`
     const accordionData = fieldsToAccordion.map((section) => ({
         title: section.sectionTitle,
         subItems: section.fields.map((field) => ({

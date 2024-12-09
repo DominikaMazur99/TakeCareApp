@@ -2,16 +2,13 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-// Typy dla kontekstu
 interface SidebarContextType {
     selectedSection: string;
     setSelectedSection: (section: string) => void;
 }
 
-// Tworzymy kontekst
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
-// Provider dla kontekstu
 export const SidebarProvider = ({ children }: { children: ReactNode }) => {
     const [selectedSection, setSelectedSection] = useState("Strona główna");
 
@@ -24,7 +21,6 @@ export const SidebarProvider = ({ children }: { children: ReactNode }) => {
     );
 };
 
-// Hook do korzystania z kontekstu
 export const useSidebar = (): SidebarContextType => {
     const context = useContext(SidebarContext);
     if (!context) {

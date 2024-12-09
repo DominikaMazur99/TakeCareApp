@@ -11,8 +11,8 @@ interface AccordionComponentProps {
         title: string;
         subItems?: Array<{
             title: string;
-            targetId?: string; // ID of the element to scroll to
-        }>; // Subitems representing fields in a section
+            targetId?: string;
+        }>;
     }>;
     className?: string;
 }
@@ -35,7 +35,7 @@ const AccordionComponent: React.FC<AccordionComponentProps> = ({
 
     return (
         <AccordionPrimitive.Root
-            type="multiple" // Allows multiple sections to be expanded at the same time
+            type="multiple"
             className={cn(
                 "w-full min-w-[190px] bg-white rounded-md shadow-md p-1",
                 className
@@ -57,10 +57,7 @@ const AccordionComponent: React.FC<AccordionComponentProps> = ({
                     </AccordionPrimitive.Trigger>
                 </AccordionPrimitive.Header>
                 <AccordionPrimitive.Content className="overflow-hidden text-sm text-[#242628] font-[500] data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
-                    <AccordionPrimitive.Root
-                        type="multiple" // Allows multiple subsections to be expanded at the same time
-                        className="pl-4"
-                    >
+                    <AccordionPrimitive.Root type="multiple" className="pl-4">
                         {data.map((item, index) => (
                             <AccordionPrimitive.Item
                                 key={index}

@@ -8,7 +8,7 @@ import {
     SelectValue,
     SelectContent,
     SelectItem,
-} from "@/components/ui/select"; // Replace with your actual Select component import
+} from "@/components/ui/select";
 
 interface SelectProps {
     id: string;
@@ -17,8 +17,8 @@ interface SelectProps {
     placeholder?: string;
     rules?: object;
     className?: string;
-    fetchOptions: () => Promise<{ label: string; value: string | number }[]>; // API fetch function
-    defaultValue?: string | number; // Default selected value
+    fetchOptions: () => Promise<{ label: string; value: string | number }[]>;
+    defaultValue?: string | number;
 }
 
 const SelectComponent: React.FC<SelectProps> = ({

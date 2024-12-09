@@ -3,6 +3,7 @@ import Logo from "../../icons/appIcon.svg";
 import ButtonComponent from "../ui/ButtonComponent";
 import Calender from "../../icons/CalenderIcon.svg";
 import Spider from "../../icons/SpiderIcon.svg";
+import LanguageSelect from "./ui/LanguageSelect";
 // import SelectComponent from "../ui/SelectComponent";
 // import World from "../../icons/WorldIcon.svg";
 
@@ -24,11 +25,7 @@ const NavbarComponent: React.FC = () => {
                         name="Umów wizytę"
                         icon={<Calender className="text-white" />}
                     />
-                    {/* <SelectComponent
-                        icon={<World />}
-                        arrowColor="#0068FA"
-                        value="PL"
-                    /> */}
+                    <LanguageSelect />
                 </div>
             </div>
         </div>
