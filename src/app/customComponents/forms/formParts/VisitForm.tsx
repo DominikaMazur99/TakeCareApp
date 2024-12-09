@@ -20,6 +20,21 @@ const VisitForm: React.FC = () => {
             url: "/api/specializations",
         });
     };
+    const fetchTopicOptions = async () => {
+        return await fetchOptionsFromAPI({
+            url: "/api/topic",
+        });
+    };
+    const fetchHoursOptions = async () => {
+        return await fetchOptionsFromAPI({
+            url: "/api/hours",
+        });
+    };
+    const fetchLanguagesOptions = async () => {
+        return await fetchOptionsFromAPI({
+            url: "/api/languages",
+        });
+    };
     return (
         <>
             <h3 className="text-[24px] text-textLabel font-small">Wizyta</h3>
@@ -32,7 +47,6 @@ const VisitForm: React.FC = () => {
             <SelectComponent
                 name="Visit Type"
                 label="Rodzaj wizyty"
-                placeholder="Wizyta domowa"
                 rules={{ required: "Pole wymagane." }}
                 fetchOptions={fetchVisitsOptions}
                 defaultValue={"Wizyta domowa"}
@@ -61,16 +75,14 @@ const VisitForm: React.FC = () => {
                         <SelectComponent
                             name="From"
                             placeholder="Od"
-                            fetchOptions={fetchCategoryOptions}
-                            defaultValue={"Jak najszybciej"}
+                            fetchOptions={fetchHoursOptions}
                         />
                     </div>
                     <div className="w-1/2">
                         <SelectComponent
                             name="To"
                             placeholder="Do"
-                            fetchOptions={fetchCategoryOptions}
-                            defaultValue={"Jak najszybciej"}
+                            fetchOptions={fetchHoursOptions}
                         />
                     </div>
                 </div>
@@ -79,7 +91,7 @@ const VisitForm: React.FC = () => {
                 name="Topic"
                 label="Temat"
                 placeholder="Wybierz z listy"
-                fetchOptions={fetchCategoryOptions}
+                fetchOptions={fetchTopicOptions}
             />
             <TextareaComponent
                 name="Additional Information"
@@ -91,7 +103,7 @@ const VisitForm: React.FC = () => {
                 label="Język wizyty"
                 placeholder="Wybierz z listy"
                 rules={{ required: "Pole wymagane." }}
-                fetchOptions={fetchCategoryOptions}
+                fetchOptions={fetchLanguagesOptions}
             />
         </>
     );
