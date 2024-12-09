@@ -5,3 +5,15 @@
 html {
     font-family: "Inter", sans-serif;
 }
+
+.react-select__control {
+    @apply border border-none rounded-md bg-gray-100 focus:ring-2 focus:ring-blue-500;
+}
+
+.react-select__option--is-focused {
+    @apply bg-blue-100;
+}
+
+.react-select__option--is-selected {
+    @apply bg-blue-500 text-white;
+}

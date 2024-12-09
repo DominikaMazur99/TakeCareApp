@@ -24,7 +24,7 @@ const ButtonComponent: React.FC<ButtonComponentProps> = ({
     icon,
 }) => {
     return (
-        <Button variant={variant} icon={icon}>
+        <Button variant={variant} icon={icon} className="break-words">
             {name}
         </Button>
     );

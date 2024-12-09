@@ -6,6 +6,7 @@ import TextareaComponent from "../fields/TextareaComponent";
 import DatePickerComponent from "../fields/DatePickerComponent";
 import RadioButtonsComponent from "../fields/RadioButtonsComponent";
 import CheckboxComponent from "../fields/CheckboxComponent";
+import dynamic from "next/dynamic";
 
 const PacientForm: React.FC = () => {
     const fetchSymptomsOptions = async () => {
@@ -13,6 +14,12 @@ const PacientForm: React.FC = () => {
             url: "/api/symptoms",
         });
     };
+    const MultiSelectComponent = dynamic(
+        () => import("../fields/MultiselectComponent"),
+        {
+            ssr: false,
+        }
+    );
     const fetchCountriesOptions = async () => {
         return await fetchOptionsFromAPI({
             url: "/api/countries",
@@ -56,11 +63,14 @@ const PacientForm: React.FC = () => {
                     </div>
                 </div>
             </div>
-            <SelectComponent
+            <MultiSelectComponent
                 id="symptoms"
                 name="Symptoms"
                 label="Objawy"
                 fetchOptions={fetchSymptomsOptions}
+                onChange={() => {
+                    console.log("aa");
+                }}
             />
             <RadioButtonsComponent
                 name="document"

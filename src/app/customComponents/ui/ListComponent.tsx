@@ -1,6 +1,8 @@
-import { useSidebar } from "@/hooks/SidebarContext";
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { useSidebar } from "@/hooks/SidebarContext";
 import { Icons, IconName } from "../../icons/sidebar";
 
 interface Element {
@@ -19,7 +21,8 @@ const ListComponent: React.FC<ListComponentProps> = ({ elements }) => {
     return (
         <ul className="text-textBase text-base font-medium">
             {elements.map((item) => {
-                const isSelected = selectedSection === item.name;
+                const isSelected =
+                    selectedSection === item.path.split("/").pop();
 
                 return (
                     <li key={item.name}>
@@ -30,7 +33,11 @@ const ListComponent: React.FC<ListComponentProps> = ({ elements }) => {
                                         ? "text-[#0068FA]"
                                         : "text-gray-700"
                                 } p-2`}
-                                onClick={() => setSelectedSection(item.name)}
+                                onClick={() =>
+                                    setSelectedSection(
+                                        item.path.split("/").pop()!
+                                    )
+                                }
                             >
                                 <span className="w-6 h-6 flex-shrink-0">
                                     {React.createElement(Icons[item.icon], {

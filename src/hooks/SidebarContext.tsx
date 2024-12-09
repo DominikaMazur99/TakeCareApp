@@ -1,16 +1,31 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
-interface SidebarContextType {
+interface SidebarContextProps {
     selectedSection: string;
     setSelectedSection: (section: string) => void;
 }
 
-const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
+const SidebarContext = createContext<SidebarContextProps>({
+    selectedSection: "",
+    setSelectedSection: () => {},
+});
 
-export const SidebarProvider = ({ children }: { children: ReactNode }) => {
-    const [selectedSection, setSelectedSection] = useState("Strona główna");
+export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
+    children,
+}) => {
+    const pathname = usePathname();
+    const [selectedSection, setSelectedSection] = useState("");
+
+    useEffect(() => {
+        // Synchronizuj `selectedSection` z URL-em
+        if (pathname) {
+            const sectionFromPath = pathname.split("/").pop() || "home"; // Domyślnie "home"
+            setSelectedSection(sectionFromPath);
+        }
+    }, [pathname]);
 
     return (
         <SidebarContext.Provider
@@ -21,10 +36,4 @@ export const SidebarProvider = ({ children }: { children: ReactNode }) => {
     );
 };
 
-export const useSidebar = (): SidebarContextType => {
-    const context = useContext(SidebarContext);
-    if (!context) {
-        throw new Error("useSidebar must be used within a SidebarProvider.");
-    }
-    return context;
-};
+export const useSidebar = () => useContext(SidebarContext);
