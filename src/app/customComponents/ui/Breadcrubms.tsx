@@ -30,9 +30,10 @@ const Breadcrumbs: React.FC = () => {
             .filter((el) => el.name !== "section");
 
     const allOptions = [...menuItems, ...logoutItems, ...settingsItems];
-    const selectedOption = allOptions.find(
-        (el) => el.path === breadcrumbs[0].path
-    );
+    const selectedOption =
+        breadcrumbs &&
+        breadcrumbs[0]?.path &&
+        allOptions.find((el) => el.path === breadcrumbs[0].path);
     console.log(pathname, breadcrumbs, allOptions, selectedOption);
 
     return (

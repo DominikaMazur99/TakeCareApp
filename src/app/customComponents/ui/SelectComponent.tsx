@@ -7,27 +7,13 @@ import {
 import React from "react";
 
 interface SelectComponentProps {
-    icon?: React.ReactNode;
-    borderColor?: string;
-    arrowColor?: string;
     value: string;
 }
 
-const SelectComponent: React.FC<SelectComponentProps> = ({
-    icon,
-    borderColor,
-    arrowColor,
-    value,
-}) => {
+const SelectComponent: React.FC<SelectComponentProps> = ({ value }) => {
     return (
         <Select>
-            <SelectTrigger
-                icon={icon}
-                borderColor={borderColor}
-                arrowColor={arrowColor}
-            >
-                {value}
-            </SelectTrigger>
+            <SelectTrigger>{value}</SelectTrigger>
             <SelectContent>
                 <SelectItem value="option1">Opcja 1</SelectItem>
                 <SelectItem value="option2">Opcja 2</SelectItem>

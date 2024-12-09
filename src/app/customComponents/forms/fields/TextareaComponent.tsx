@@ -3,20 +3,20 @@
 import React from "react";
 import { useFormContext, Controller } from "react-hook-form";
 
-interface InputProps {
+interface TextareaProps {
     name: string;
     label?: string;
     placeholder?: string;
-    type?: string;
+    rows?: number;
     rules?: object;
     className?: string;
 }
 
-const InputComponent: React.FC<InputProps> = ({
+const TextareaComponent: React.FC<TextareaProps> = ({
     name,
     label,
     placeholder,
-    type = "text",
+    rows = 3,
     rules,
     className = "",
 }) => {
@@ -27,7 +27,7 @@ const InputComponent: React.FC<InputProps> = ({
             {label && (
                 <label
                     htmlFor={name}
-                    className="text-base text-textLabel font-hight"
+                    className="text-base text-textLabel font-bold"
                 >
                     {label}
                 </label>
@@ -38,15 +38,13 @@ const InputComponent: React.FC<InputProps> = ({
                 rules={rules}
                 render={({ field, fieldState }) => (
                     <div>
-                        <input
+                        <textarea
                             {...field}
                             id={name}
                             placeholder={placeholder}
-                            type={type}
-                            className={` py-2 w-full text-textHover placeholder:text-base placeholder:text-textHover placeholder:font-small focus:outline-none  ${
-                                fieldState.error
-                                    ? "border-red-500"
-                                    : "border-gray-300"
+                            rows={rows}
+                            className={`w-full p-4 text-sm text-gray-900 bg-gray-100 border border-transarent rounded-lg placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 ${
+                                fieldState.error ? "border-red-500" : ""
                             }`}
                         />
                         {fieldState.error && (
@@ -57,9 +55,8 @@ const InputComponent: React.FC<InputProps> = ({
                     </div>
                 )}
             />
-            <div className=" h-px bg-gray-300"></div>
         </div>
     );
 };
 
-export default InputComponent;
+export default TextareaComponent;

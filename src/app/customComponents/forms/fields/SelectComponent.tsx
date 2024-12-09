@@ -2,6 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { useFormContext, Controller } from "react-hook-form";
+import {
+    Select,
+    SelectTrigger,
+    SelectValue,
+    SelectContent,
+    SelectItem,
+} from "@/components/ui/select"; // Replace with your actual Select component import
 
 interface SelectProps {
     name: string;
@@ -9,8 +16,8 @@ interface SelectProps {
     placeholder?: string;
     rules?: object;
     className?: string;
-    fetchOptions: () => Promise<{ label: string; value: string | number }[]>; // Ensure fetchOptions matches this signature
-    defaultValue?: string | number; // Add defaultValue prop
+    fetchOptions: () => Promise<{ label: string; value: string | number }[]>; // API fetch function
+    defaultValue?: string | number; // Default selected value
 }
 
 const SelectComponent: React.FC<SelectProps> = ({
@@ -20,13 +27,13 @@ const SelectComponent: React.FC<SelectProps> = ({
     rules,
     className = "",
     fetchOptions,
-    defaultValue = "", // Default to empty string if no value is provided
+    defaultValue,
 }) => {
     const { control } = useFormContext();
     const [options, setOptions] = useState<
         { label: string; value: string | number }[]
     >([]);
-    const [loading, setLoading] = useState<boolean>(true); // Track loading state
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -45,7 +52,7 @@ const SelectComponent: React.FC<SelectProps> = ({
     }, [fetchOptions]);
 
     return (
-        <div className={`flex flex-col gap-1 ${className}`}>
+        <div className={`flex flex-col gap-1 ${className} `}>
             {label && (
                 <label
                     htmlFor={name}
@@ -58,34 +65,37 @@ const SelectComponent: React.FC<SelectProps> = ({
                 name={name}
                 control={control}
                 rules={rules}
-                defaultValue={defaultValue} // Set the default value for the select
-                render={({ field, fieldState }) => (
-                    <div>
-                        <select
-                            {...field}
-                            id={name}
-                            disabled={loading || options.length === 0} // Disable while loading
-                            className={`py-2 w-full placeholder:text-base placeholder:text-textHover placeholder:font-small focus:outline-none ${
-                                fieldState.error
-                                    ? "border-red-500"
-                                    : "border-gray-300"
-                            }`}
-                        >
-                            <option value="" disabled>
-                                {loading ? "Opcje ładują się..." : placeholder}
-                            </option>
-                            {options.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </select>
-                        {fieldState.error && (
-                            <span className="text-sm text-red-500">
-                                {fieldState.error.message}
-                            </span>
-                        )}
-                    </div>
+                defaultValue={defaultValue || options[0]?.value || ""}
+                render={({ field }) => (
+                    <Select
+                        value={field.value}
+                        onValueChange={(value) => field.onChange(value)}
+                    >
+                        <SelectTrigger className="w-full">
+                            <SelectValue placeholder={placeholder} />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {!loading && options.length === 0 && (
+                                <SelectItem value="no-options" disabled>
+                                    No options available
+                                </SelectItem>
+                            )}
+                            {loading ? (
+                                <SelectItem value="loading" disabled>
+                                    Loading...
+                                </SelectItem>
+                            ) : (
+                                options.map((option) => (
+                                    <SelectItem
+                                        key={option.value}
+                                        value={String(option.value)}
+                                    >
+                                        {option.label}
+                                    </SelectItem>
+                                ))
+                            )}
+                        </SelectContent>
+                    </Select>
                 )}
             />
             <div className="h-px bg-gray-300"></div>
