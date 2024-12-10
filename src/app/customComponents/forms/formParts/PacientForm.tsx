@@ -28,7 +28,7 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
     return (
         <div id={`patient-section-${index}`} className="flex flex-col gap-6">
             <h3 className="text-[24px] text-[#112950] font-[300]">
-                Pacjent {index + 1}
+                {index === 0 ? `Pacjent` : `Pacjent ${index + 1}`}
             </h3>
             <RadioButtonsComponent
                 name={`pacients.${index}.age`}
@@ -113,43 +113,48 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                     }}
                 />
             )}
-            <div>
-                <label
-                    htmlFor={`pacients-${index}-address`}
-                    className="block text-base text-textLabel font-hight mb-2"
-                >
-                    Dane adresowe
-                </label>
-                <div>
-                    <SelectComponent
-                        id={`pacients-${index}-country`}
-                        name={`pacients.${index}.country`}
-                        placeholder="Kraj"
-                        options={options.countries || []}
+            {index === 0 && (
+                <>
+                    <div>
+                        <label
+                            htmlFor={`pacients-${index}-address`}
+                            className="block text-base text-textLabel font-hight mb-2"
+                        >
+                            Dane adresowe
+                        </label>
+                        <div>
+                            <SelectComponent
+                                id={`pacients-${index}-country`}
+                                name={`pacients.${index}.country`}
+                                placeholder="Kraj"
+                                options={options.countries || []}
+                            />
+                        </div>
+                        <div className="flex items-center gap-4 w-full">
+                            <div className="w-1/2">
+                                <InputComponent
+                                    id={`pacients-${index}-street`}
+                                    name={`pacients.${index}.street`}
+                                    placeholder="Ulica"
+                                />
+                            </div>
+                            <div className="w-1/2">
+                                <InputComponent
+                                    id={`pacients-${index}-local`}
+                                    name={`pacients.${index}.local`}
+                                    placeholder="Numer lokalu"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <CheckboxComponent
+                        name={`pacients.${index}.difadress`}
+                        label="Wizyta ma się odbyć na inny adres"
                     />
-                </div>
-                <div className="flex items-center gap-4 w-full">
-                    <div className="w-1/2">
-                        <InputComponent
-                            id={`pacients-${index}-street`}
-                            name={`pacients.${index}.street`}
-                            placeholder="Ulica"
-                        />
-                    </div>
-                    <div className="w-1/2">
-                        <InputComponent
-                            id={`pacients-${index}-local`}
-                            name={`pacients.${index}.local`}
-                            placeholder="Numer lokalu"
-                        />
-                    </div>
-                </div>
-            </div>
-            <CheckboxComponent
-                name={`pacients.${index}.difadress`}
-                label="Wizyta ma się odbyć na inny adres"
-            />
-            {secondAdress && (
+                </>
+            )}
+
+            {secondAdress && index === 0 && (
                 <div>
                     <label
                         htmlFor={`pacients-${index}-address-2`}

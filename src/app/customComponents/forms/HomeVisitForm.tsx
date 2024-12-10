@@ -105,7 +105,7 @@ const HomeVisitForm: React.FC = () => {
                 {fields.map((field, index) => (
                     <div key={field.id} className="relative ">
                         <PacientForm index={index} />
-                        {fields.length > 1 && (
+                        {fields.length > 1 && index > 0 && (
                             <button
                                 type="button"
                                 onClick={() => handleRemovePacient(index)}
