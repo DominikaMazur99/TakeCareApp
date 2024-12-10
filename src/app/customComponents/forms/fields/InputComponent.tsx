@@ -46,7 +46,7 @@ const InputComponent: React.FC<InputProps> = ({
                             placeholder={placeholder}
                             type={type}
                             value={field.value || ""}
-                            className={` py-2 w-full text-textHover placeholder:text-base placeholder:text-textHover placeholder:font-small focus:outline-none  ${
+                            className={` py-2 w-full border-b border-gray-300 text-textHover placeholder:text-base placeholder:text-textHover placeholder:font-small focus:outline-none  ${
                                 fieldState.error
                                     ? "border-red-500"
                                     : "border-gray-300"
@@ -60,7 +60,6 @@ const InputComponent: React.FC<InputProps> = ({
                     </div>
                 )}
             />
-            <div className=" h-px bg-gray-300"></div>
         </div>
     );
 };
