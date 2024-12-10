@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+"use client";
+
+import React from "react";
 import InputComponent from "../fields/InputComponent";
 import RadioButtonsComponent from "../fields/RadioButtonsComponent";
 import CheckboxComponent from "../fields/CheckboxComponent";
@@ -8,27 +10,27 @@ import { useSidebar } from "@/hooks/SidebarContext";
 import MultiSelectComponent from "../fields/MultiselectComponent";
 import SelectComponent from "../fields/SelectComponent";
 
-const PacientForm: React.FC = () => {
+interface PacientFormProps {
+    index: number; // Indeks formularza pacjenta w tablicy
+}
+
+const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
     const { options, loading } = useSidebar();
-    const { watch } = useFormContext(); // Używaj useFormContext zamiast useForm
-    const documentType = watch("document");
-    const secondAdress = watch("difadress");
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true); // Ustaw flagę po załadowaniu klienta
-    }, []);
-
-    if (!isClient) return null; // Zatrzymaj renderowanie na serwerze
+    const { watch } = useFormContext();
+    const documentType = watch(`pacients.${index}.document`);
+    const secondAdress = watch(`pacients.${index}.difadress`);
 
     if (loading) {
         return <p>Ładowanie danych...</p>;
     }
+
     return (
-        <div id="patient-section" className="flex flex-col gap-6">
-            <h3 className="text-[24px] text-textLabel font-small">Pacjent</h3>
+        <div id={`patient-section-${index}`} className="flex flex-col gap-6">
+            <h3 className="text-[24px] text-[#112950] font-[300]">
+                Pacjent {index + 1}
+            </h3>
             <RadioButtonsComponent
-                name="age"
+                name={`pacients.${index}.age`}
                 label="Wiek pacjenta"
                 options={[
                     { label: "Dorosły", value: "adult" },
@@ -37,10 +39,10 @@ const PacientForm: React.FC = () => {
                 rules={{
                     required: "Wybór jest wymagany.",
                 }}
-            />{" "}
+            />
             <div>
                 <label
-                    htmlFor=""
+                    htmlFor={`pacients-${index}-data`}
                     className="block text-base text-textLabel font-hight mb-2"
                 >
                     Dane Pacjenta
@@ -48,29 +50,28 @@ const PacientForm: React.FC = () => {
                 <div className="flex items-center gap-4 w-full">
                     <div className="w-1/2">
                         <InputComponent
-                            id="pacient-name"
-                            name="name"
+                            id={`pacients-${index}-name`}
+                            name={`pacients.${index}.name`}
                             placeholder="Imię"
                         />
                     </div>
                     <div className="w-1/2">
                         <InputComponent
-                            id="pacient-surname"
-                            name="surname"
+                            id={`pacients-${index}-surname`}
+                            name={`pacients.${index}.surname`}
                             placeholder="Nazwisko"
                         />
                     </div>
                 </div>
             </div>
             <MultiSelectComponent
-                key="symptoms"
-                id="symptoms"
-                name="Symptoms"
+                id={`pacients-${index}-symptoms`}
+                name={`pacients.${index}.symptoms`}
                 label="Objawy"
                 options={options.symptoms || []}
             />
             <RadioButtonsInOne
-                name="document"
+                name={`pacients.${index}.document`}
                 label="Dokument"
                 options={[
                     { label: "PESEL", value: "pesel" },
@@ -80,87 +81,83 @@ const PacientForm: React.FC = () => {
                     required: "Wybór jest wymagany.",
                 }}
             />
-            {documentType && documentType === "passport" ? (
+            {documentType === "passport" ? (
                 <InputComponent
-                    id="passport"
-                    name="passport"
+                    id={`pacients-${index}-passport`}
+                    name={`pacients.${index}.passport`}
                     placeholder="Wpisz numer paszportu"
                 />
             ) : (
                 <InputComponent
-                    id="pesel"
-                    name={"pesel".toLowerCase()}
+                    id={`pacients-${index}-pesel`}
+                    name={`pacients.${index}.pesel`}
                     placeholder="Wpisz numer PESEL"
                 />
             )}
             <div>
                 <label
-                    htmlFor=""
+                    htmlFor={`pacients-${index}-address`}
                     className="block text-base text-textLabel font-hight mb-2"
                 >
                     Dane adresowe
                 </label>
                 <div>
-                    {isClient && (
-                        <SelectComponent
-                            id="country"
-                            name="country"
-                            placeholder="Kraj"
-                            options={options.countries || []}
-                        />
-                    )}
+                    <SelectComponent
+                        id={`pacients-${index}-country`}
+                        name={`pacients.${index}.country`}
+                        placeholder="Kraj"
+                        options={options.countries || []}
+                    />
                 </div>
                 <div className="flex items-center gap-4 w-full">
                     <div className="w-1/2">
                         <InputComponent
-                            id="street"
-                            name="street"
+                            id={`pacients-${index}-street`}
+                            name={`pacients.${index}.street`}
                             placeholder="Ulica"
                         />
                     </div>
                     <div className="w-1/2">
                         <InputComponent
-                            id="local-number"
-                            name="local"
+                            id={`pacients-${index}-local`}
+                            name={`pacients.${index}.local`}
                             placeholder="Numer lokalu"
                         />
                     </div>
                 </div>
             </div>
             <CheckboxComponent
-                name="difadress"
+                name={`pacients.${index}.difadress`}
                 label="Wizyta ma się odbyć na inny adres"
             />
             {secondAdress && (
                 <div>
                     <label
-                        htmlFor=""
+                        htmlFor={`pacients-${index}-address-2`}
                         className="block text-base text-textLabel font-hight mb-2"
                     >
                         Dane adresowe (2)
                     </label>
                     <div>
-                        {isClient && (
-                            <SelectComponent
-                                id="country-2"
-                                name="country-2"
-                                placeholder="Kraj"
-                                options={options.countries || []}
-                            />
-                        )}
+                        <SelectComponent
+                            id={`pacients-${index}-country-2`}
+                            name={`pacients.${index}.secondCountry`}
+                            placeholder="Kraj"
+                            options={options.countries || []}
+                        />
                     </div>
                     <div className="flex items-center gap-4 w-full">
                         <div className="w-1/2">
                             <InputComponent
-                                id="street-2"
-                                name="street-2"
+                                id={`pacients-${index}-street-2`}
+                                name={`pacients.${index}.secondStreet`}
                                 placeholder="Ulica"
                             />
                         </div>
                         <div className="w-1/2">
                             <InputComponent
-                                id="local-number-2"
-                                name="local-2"
+                                id={`pacients-${index}-local-2`}
+                                name={`pacients.${index}.secondLocal`}
                                 placeholder="Numer lokalu"
                             />
                         </div>

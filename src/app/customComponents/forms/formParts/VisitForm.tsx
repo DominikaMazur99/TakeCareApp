@@ -23,7 +23,7 @@ const VisitForm: React.FC = () => {
 
     return (
         <div id="visit-section" className="flex flex-col gap-6">
-            <h3 className="text-[24px] text-textLabel font-small">Wizyta</h3>
+            <h3 className="text-[24px] text-[#112950] font-[300]">Wizyta</h3>
             <InputComponent
                 id="number-of-issue"
                 name="numberOfIssue"
