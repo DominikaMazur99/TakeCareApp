@@ -86,12 +86,73 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                     id={`pacients-${index}-passport`}
                     name={`pacients.${index}.passport`}
                     placeholder="Wpisz numer paszportu"
+                    rules={{
+                        required: "Numer dowodu osobistego jest wymagany.",
+                        pattern: {
+                            value: /^[A-Z]{3}[0-9]{6}$/,
+                            message:
+                                "Numer dowodu osobistego musi składać się z 3 wielkich liter i 6 cyfr (np. ABC123456).",
+                        },
+                        validate: {
+                            checksum: (value: string) => {
+                                if (!/^[A-Z]{3}[0-9]{6}$/.test(value)) {
+                                    return false; // Jeśli format jest niepoprawny, odrzucamy.
+                                }
+
+                                // Walidacja sumy kontrolnej dla dowodu osobistego
+                                const weights = [7, 3, 1, 7, 3, 1, 7, 3, 1];
+                                const characters = value.split("");
+
+                                const sum = characters.reduce(
+                                    (acc, char, index) => {
+                                        const charValue =
+                                            index < 3 // Pierwsze trzy znaki to litery
+                                                ? char.charCodeAt(0) - 55 // Konwertujemy litery na wartości numeryczne (A=10, B=11, ..., Z=35)
+                                                : parseInt(char, 10); // Kolejne znaki to cyfry
+
+                                        return acc + weights[index] * charValue;
+                                    },
+                                    0
+                                );
+
+                                return sum % 10 === 0
+                                    ? true
+                                    : "Numer dowodu osobistego ma nieprawidłową sumę kontrolną.";
+                            },
+                        },
+                    }}
                 />
             ) : (
                 <InputComponent
                     id={`pacients-${index}-pesel`}
                     name={`pacients.${index}.pesel`}
                     placeholder="Wpisz numer PESEL"
+                    rules={{
+                        required: "Numer PESEL jest wymagany.",
+                        pattern: {
+                            value: /^[0-9]{11}$/,
+                            message: "Numer PESEL musi składać się z 11 cyfr.",
+                        },
+                        validate: {
+                            checksum: (value: string) => {
+                                if (!/^[0-9]{11}$/.test(value)) {
+                                    return false;
+                                }
+
+                                const weights = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3];
+                                const sum = weights.reduce(
+                                    (acc, weight, index) =>
+                                        acc + weight * parseInt(value[index]),
+                                    0
+                                );
+                                const checksum = (10 - (sum % 10)) % 10;
+
+                                return checksum === parseInt(value[10])
+                                    ? true
+                                    : "Numer PESEL ma nieprawidłową sumę kontrolną.";
+                            },
+                        },
+                    }}
                 />
             )}
             <div>
