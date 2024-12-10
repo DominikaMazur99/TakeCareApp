@@ -7,10 +7,13 @@ import CheckboxComponent from "../fields/CheckboxComponent";
 import dynamic from "next/dynamic";
 import { useSidebar } from "@/hooks/SidebarContext";
 import SelectComponent from "../fields/SelectComponent";
+import { useFormContext } from "react-hook-form";
 
 const VisitForm: React.FC = () => {
-    const { options, loading } = useSidebar();
+    const { options } = useSidebar();
     const [isClient, setIsClient] = useState(false);
+    const { watch } = useFormContext(); // Używaj useFormContext zamiast useForm
+    const showHoursRange = watch("hoursrange");
 
     useEffect(() => {
         setIsClient(true); // Ustaw flagę po załadowaniu klienta
@@ -60,35 +63,37 @@ const VisitForm: React.FC = () => {
                 name="hoursrange"
                 label="Wybierz konkretny przedział godzinowy"
             />
-            <div>
-                <label className="text-base text-textLabel font-hight">
-                    Godzina
-                </label>
-                <div className="flex items-center gap-4 w-full">
-                    {isClient && (
-                        <>
-                            <div className="w-1/2">
-                                <SelectComponent
-                                    key="from"
-                                    id="from"
-                                    name="From"
-                                    placeholder="Od"
-                                    options={options.hours || []}
-                                />
-                            </div>
-                            <div className="w-1/2">
-                                <SelectComponent
-                                    key="to"
-                                    id="to"
-                                    name="To"
-                                    placeholder="Do"
-                                    options={options.hours || []}
-                                />
-                            </div>
-                        </>
-                    )}
+            {showHoursRange && (
+                <div>
+                    <label className="text-base text-textLabel font-hight">
+                        Godzina
+                    </label>
+                    <div className="flex items-center gap-4 w-full">
+                        {isClient && (
+                            <>
+                                <div className="w-1/2">
+                                    <SelectComponent
+                                        key="from"
+                                        id="from"
+                                        name="From"
+                                        placeholder="Od"
+                                        options={options.hours || []}
+                                    />
+                                </div>
+                                <div className="w-1/2">
+                                    <SelectComponent
+                                        key="to"
+                                        id="to"
+                                        name="To"
+                                        placeholder="Do"
+                                        options={options.hours || []}
+                                    />
+                                </div>
+                            </>
+                        )}
+                    </div>
                 </div>
-            </div>
+            )}
             {isClient && (
                 <SelectComponent
                     key="topic"

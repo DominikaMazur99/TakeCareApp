@@ -12,6 +12,7 @@ const PacientForm: React.FC = () => {
     const { options, loading } = useSidebar();
     const { watch } = useFormContext(); // Używaj useFormContext zamiast useForm
     const documentType = watch("document");
+    const secondAdress = watch("difadress");
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
@@ -130,6 +131,42 @@ const PacientForm: React.FC = () => {
                 name="difadress"
                 label="Wizyta ma się odbyć na inny adres"
             />
+            {secondAdress && (
+                <div>
+                    <label
+                        htmlFor=""
+                        className="block text-base text-textLabel font-hight mb-2"
+                    >
+                        Dane adresowe (2)
+                    </label>
+                    <div>
+                        {isClient && (
+                            <SelectComponent
+                                id="country-2"
+                                name="country-2"
+                                placeholder="Kraj"
+                                options={options.countries || []}
+                            />
+                        )}
+                    </div>
+                    <div className="flex items-center gap-4 w-full">
+                        <div className="w-1/2">
+                            <InputComponent
+                                id="street-2"
+                                name="street-2"
+                                placeholder="Ulica"
+                            />
+                        </div>
+                        <div className="w-1/2">
+                            <InputComponent
+                                id="local-number-2"
+                                name="local-2"
+                                placeholder="Numer lokalu"
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
