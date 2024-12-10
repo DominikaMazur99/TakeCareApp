@@ -34,7 +34,6 @@ const Breadcrumbs: React.FC = () => {
         breadcrumbs &&
         breadcrumbs[0]?.path &&
         allOptions.find((el) => el.path === breadcrumbs[0].path);
-    console.log(pathname, breadcrumbs, allOptions, selectedOption);
 
     return (
         <Breadcrumb>

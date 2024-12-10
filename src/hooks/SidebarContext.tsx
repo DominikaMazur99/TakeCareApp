@@ -70,7 +70,6 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
                 setLoading(true);
                 const response = await fetch("/api/homeform-select-options");
                 const data = await response.json();
-                console.log(data);
 
                 if (data) {
                     const transformedData = {

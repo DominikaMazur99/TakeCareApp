@@ -23,7 +23,6 @@ const PacientForm: React.FC = () => {
     if (loading) {
         return <p>Ładowanie danych...</p>;
     }
-    console.log(options.symptoms, options);
     return (
         <div id="patient-section" className="flex flex-col gap-6">
             <h3 className="text-[24px] text-textLabel font-small">Pacjent</h3>
