@@ -6,11 +6,9 @@ interface MultiSelectProps {
     name?: string;
     label?: string;
     placeholder?: string;
-    options?: any[];
+    options: any[];
     className?: string;
     onChange?: (selected: { label: string; value: string | number }[]) => void;
-    defaultValue?: { label: string; value: string | number }[];
-    key: string;
 }
 
 const MultiSelectComponent: React.FC<MultiSelectProps> = ({
@@ -21,14 +19,8 @@ const MultiSelectComponent: React.FC<MultiSelectProps> = ({
     options,
     className = "",
     onChange,
-    defaultValue = [],
-    key,
 }) => {
-    const [selected, setSelected] =
-        useState<{ label: string; value: string | number }[]>(defaultValue);
-
     const handleChange = (selectedOptions: any) => {
-        setSelected(selectedOptions);
         if (onChange) {
             onChange(selectedOptions || []);
         }
@@ -90,13 +82,13 @@ const MultiSelectComponent: React.FC<MultiSelectProps> = ({
                 </label>
             )}
             <Select
+                id={id}
+                inputId={`${id}-input`}
                 isMulti
-                options={options}
+                options={options || []}
                 placeholder={placeholder}
-                value={selected}
                 onChange={handleChange}
                 styles={customStyles} // Apply custom styles
-                key={key}
             />
         </div>
     );

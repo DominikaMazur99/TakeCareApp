@@ -14,10 +14,12 @@ interface FormData {
     name: string;
     surname: string;
     document: string;
+    pesel: string;
     passport: string;
     country: string;
     street: string;
     local: string;
+    symptoms: any[];
     difadress: boolean;
 }
 
@@ -33,9 +35,11 @@ const HomeVisitForm: React.FC = () => {
             surname: "",
             document: "pesel",
             passport: "",
+            pesel: "",
             country: "",
             street: "",
             local: "",
+            symptoms: [],
             difadress: false,
         },
         shouldUnregister: false,

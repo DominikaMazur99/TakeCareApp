@@ -1,35 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import InputComponent from "../fields/InputComponent";
-import { fetchOptionsFromAPI } from "@/app/helpers/api";
 import RadioButtonsComponent from "../fields/RadioButtonsComponent";
 import CheckboxComponent from "../fields/CheckboxComponent";
-import dynamic from "next/dynamic";
 import RadioButtonsInOne from "../fields/RadioButtonsInOne";
 import { useFormContext } from "react-hook-form";
 import { useSidebar } from "@/hooks/SidebarContext";
+import MultiSelectComponent from "../fields/MultiselectComponent";
+import SelectComponent from "../fields/SelectComponent";
 
 const PacientForm: React.FC = () => {
     const { options, loading } = useSidebar();
     const { watch } = useFormContext(); // Używaj useFormContext zamiast useForm
     const documentType = watch("document");
+    const [isClient, setIsClient] = useState(false);
 
-    const MultiSelectComponent = dynamic(
-        () => import("../fields/MultiselectComponent"),
-        {
-            ssr: false,
-        }
-    );
-    const SelectComponent = dynamic(() => import("../fields/SelectComponent"), {
-        ssr: false,
-    });
-    const fetchCountriesOptions = async () => {
-        return await fetchOptionsFromAPI({
-            url: "/api/countries",
-        });
-    };
+    useEffect(() => {
+        setIsClient(true); // Ustaw flagę po załadowaniu klienta
+    }, []);
+
+    if (!isClient) return null; // Zatrzymaj renderowanie na serwerze
+
     if (loading) {
         return <p>Ładowanie danych...</p>;
     }
+    console.log(options.symptoms, options);
     return (
         <div id="patient-section" className="flex flex-col gap-6">
             <h3 className="text-[24px] text-textLabel font-small">Pacjent</h3>
@@ -73,7 +67,7 @@ const PacientForm: React.FC = () => {
                 id="symptoms"
                 name="Symptoms"
                 label="Objawy"
-                options={options.symptoms}
+                options={options.symptoms || []}
             />
             <RadioButtonsInOne
                 name="document"
@@ -107,13 +101,14 @@ const PacientForm: React.FC = () => {
                     Dane adresowe
                 </label>
                 <div>
-                    <SelectComponent
-                        key="country"
-                        id="country"
-                        name="country"
-                        placeholder="Kraj"
-                        options={options.countries}
-                    />
+                    {isClient && (
+                        <SelectComponent
+                            id="country"
+                            name="country"
+                            placeholder="Kraj"
+                            options={options.countries || []}
+                        />
+                    )}
                 </div>
                 <div className="flex items-center gap-4 w-full">
                     <div className="w-1/2">

@@ -45,6 +45,7 @@ const InputComponent: React.FC<InputProps> = ({
                             id={name}
                             placeholder={placeholder}
                             type={type}
+                            value={field.value || ""}
                             className={` py-2 w-full text-textHover placeholder:text-base placeholder:text-textHover placeholder:font-small focus:outline-none  ${
                                 fieldState.error
                                     ? "border-red-500"

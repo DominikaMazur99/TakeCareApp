@@ -54,7 +54,7 @@ const RadioButtonsComponent: React.FC<RadioGroupProps> = ({
                             >
                                 <input
                                     type="radio"
-                                    value={option.value}
+                                    value={option.value || ""}
                                     checked={field.value === option.value}
                                     onChange={() =>
                                         field.onChange(option.value)

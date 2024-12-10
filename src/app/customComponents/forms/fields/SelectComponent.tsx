@@ -9,10 +9,8 @@ interface SelectProps {
     name: string;
     label?: string;
     placeholder?: string;
-    options?: any;
+    options: any;
     rules?: object;
-    defaultValue?: { label: string; value: string | number };
-    key: string;
 }
 
 const SelectComponent: React.FC<SelectProps> = ({
@@ -22,8 +20,6 @@ const SelectComponent: React.FC<SelectProps> = ({
     placeholder = "Wybierz opcję",
     options,
     rules,
-    defaultValue,
-    key,
 }) => {
     const { control } = useFormContext();
 
@@ -77,24 +73,26 @@ const SelectComponent: React.FC<SelectProps> = ({
                 name={name}
                 control={control}
                 rules={rules}
-                defaultValue={defaultValue}
                 render={({ field, fieldState }) => (
                     <div>
                         <Select
                             {...field}
                             id={id}
-                            options={options}
+                            inputId={`${id}-input`}
+                            options={options || []}
                             placeholder={placeholder}
-                            value={options.find(
-                                (option: any) => option.value === field.value
-                            )}
+                            value={
+                                options?.find(
+                                    (option: any) =>
+                                        option.value === field.value
+                                ) || null
+                            }
                             onChange={(selectedOption) =>
                                 field.onChange(
-                                    selectedOption ? selectedOption.value : null
+                                    selectedOption ? selectedOption.value : ""
                                 )
                             }
                             styles={customStyles}
-                            key={key}
                         />
 
                         {fieldState.error && (

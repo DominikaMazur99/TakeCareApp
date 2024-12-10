@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import InputComponent from "../fields/InputComponent";
 import { fetchOptionsFromAPI } from "@/app/helpers/api";
 import TextareaComponent from "../fields/TextareaComponent";
@@ -6,13 +6,18 @@ import DatePickerComponent from "../fields/DatePickerComponent";
 import CheckboxComponent from "../fields/CheckboxComponent";
 import dynamic from "next/dynamic";
 import { useSidebar } from "@/hooks/SidebarContext";
+import SelectComponent from "../fields/SelectComponent";
 
 const VisitForm: React.FC = () => {
     const { options, loading } = useSidebar();
+    const [isClient, setIsClient] = useState(false);
 
-    const SelectComponent = dynamic(() => import("../fields/SelectComponent"), {
-        ssr: false,
-    });
+    useEffect(() => {
+        setIsClient(true); // Ustaw flagę po załadowaniu klienta
+    }, []);
+
+    if (!isClient) return null; // Zatrzymaj renderowanie na serwerze
+
     return (
         <div id="visit-section" className="flex flex-col gap-6">
             <h3 className="text-[24px] text-textLabel font-small">Wizyta</h3>
@@ -23,23 +28,27 @@ const VisitForm: React.FC = () => {
                 placeholder="Wpisz numer zgłoszenia"
                 rules={{ required: "Pole wymagane." }}
             />
-            <SelectComponent
-                key="visit-type"
-                id="visit-type"
-                name="Visit Type"
-                label="Rodzaj wizyty"
-                rules={{ required: "Pole wymagane." }}
-                options={options.visits}
-            />
-            <SelectComponent
-                key="specialization"
-                id="specialization"
-                name="Specialization"
-                label="Specjalizacja"
-                placeholder="Wybierz z listy"
-                rules={{ required: "Pole wymagane." }}
-                options={options.specializations}
-            />
+            {isClient && (
+                <>
+                    <SelectComponent
+                        key="visit-type"
+                        id="visit-type"
+                        name="Visit Type"
+                        label="Rodzaj wizyty"
+                        rules={{ required: "Pole wymagane." }}
+                        options={options.visits || []}
+                    />
+                    <SelectComponent
+                        key="specialization"
+                        id="specialization"
+                        name="Specialization"
+                        label="Specjalizacja"
+                        placeholder="Wybierz z listy"
+                        rules={{ required: "Pole wymagane." }}
+                        options={options.specializations || []}
+                    />
+                </>
+            )}
 
             <DatePickerComponent
                 name="Visit Date"
@@ -56,49 +65,57 @@ const VisitForm: React.FC = () => {
                     Godzina
                 </label>
                 <div className="flex items-center gap-4 w-full">
-                    <div className="w-1/2">
-                        <SelectComponent
-                            key="from"
-                            id="from"
-                            name="From"
-                            placeholder="Od"
-                            options={options.hours}
-                        />
-                    </div>
-                    <div className="w-1/2">
-                        <SelectComponent
-                            key="to"
-                            id="to"
-                            name="To"
-                            placeholder="Do"
-                            options={options.hours}
-                        />
-                    </div>
+                    {isClient && (
+                        <>
+                            <div className="w-1/2">
+                                <SelectComponent
+                                    key="from"
+                                    id="from"
+                                    name="From"
+                                    placeholder="Od"
+                                    options={options.hours || []}
+                                />
+                            </div>
+                            <div className="w-1/2">
+                                <SelectComponent
+                                    key="to"
+                                    id="to"
+                                    name="To"
+                                    placeholder="Do"
+                                    options={options.hours || []}
+                                />
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
-            <SelectComponent
-                key="topic"
-                id="topic"
-                name="Topic"
-                label="Temat"
-                placeholder="Wybierz z listy"
-                options={options.topics}
-            />
+            {isClient && (
+                <SelectComponent
+                    key="topic"
+                    id="topic"
+                    name="Topic"
+                    label="Temat"
+                    placeholder="Wybierz z listy"
+                    options={options.topics || []}
+                />
+            )}
             <TextareaComponent
                 id="additional"
                 name="Additional Information"
                 label="Dodatkowe informacje (opcjonalnie)"
                 placeholder="Opisz problem"
             />
-            <SelectComponent
-                key="language"
-                id="language"
-                name="Language"
-                label="Język wizyty"
-                placeholder="Wybierz z listy"
-                rules={{ required: "Pole wymagane." }}
-                options={options.languages}
-            />
+            {isClient && (
+                <SelectComponent
+                    key="language"
+                    id="language"
+                    name="Language"
+                    label="Język wizyty"
+                    placeholder="Wybierz z listy"
+                    rules={{ required: "Pole wymagane." }}
+                    options={options.languages || []}
+                />
+            )}
         </div>
     );
 };
