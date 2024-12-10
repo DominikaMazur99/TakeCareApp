@@ -41,7 +41,7 @@ const RadioButtonsInOne: React.FC<RadioGroupProps> = ({
                 control={control}
                 rules={rules}
                 render={({ field }) => (
-                    <div className="flex w-full border border-[#C5D8F1] rounded-lg bg-[#E5F0FF] p-1">
+                    <div className="flex w-full border border-[#C5D8F1] rounded-6px bg-[#E5F0FF] p-5px">
                         {options.map((option, index) => (
                             <label
                                 key={option.value}
@@ -53,12 +53,9 @@ const RadioButtonsInOne: React.FC<RadioGroupProps> = ({
                                         ? "rounded-r-md" // Right rounded corner for the last button
                                         : "", // No rounded corners for middle buttons
                                     field.value === option.value
-                                        ? "bg-white text-[#09162A] shadow-md border"
+                                        ? "bg-white py-1.5 px-3 rounded-3px text-[#09162A]"
                                         : "bg-[#E5F0FF] text-[#242628]"
                                 )}
-                                style={{
-                                    margin: "0 2px", // Ensure spacing between the buttons
-                                }}
                             >
                                 <input
                                     type="radio"

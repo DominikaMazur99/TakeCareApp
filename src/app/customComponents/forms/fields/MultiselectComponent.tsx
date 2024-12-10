@@ -6,10 +6,11 @@ interface MultiSelectProps {
     name?: string;
     label?: string;
     placeholder?: string;
-    fetchOptions: () => Promise<{ label: string; value: string | number }[]>;
+    options?: any[];
     className?: string;
     onChange?: (selected: { label: string; value: string | number }[]) => void;
     defaultValue?: { label: string; value: string | number }[];
+    key: string;
 }
 
 const MultiSelectComponent: React.FC<MultiSelectProps> = ({
@@ -17,33 +18,14 @@ const MultiSelectComponent: React.FC<MultiSelectProps> = ({
     name,
     label,
     placeholder = "Wybierz z listy",
-    fetchOptions,
+    options,
     className = "",
     onChange,
     defaultValue = [],
+    key,
 }) => {
-    const [options, setOptions] = useState<
-        { label: string; value: string | number }[]
-    >([]);
     const [selected, setSelected] =
         useState<{ label: string; value: string | number }[]>(defaultValue);
-    const [loading, setLoading] = useState<boolean>(true);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                const data = await fetchOptions();
-                setOptions(data);
-            } catch (error) {
-                console.error("Error fetching options:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, [fetchOptions]);
 
     const handleChange = (selectedOptions: any) => {
         setSelected(selectedOptions);
@@ -110,11 +92,11 @@ const MultiSelectComponent: React.FC<MultiSelectProps> = ({
             <Select
                 isMulti
                 options={options}
-                isLoading={loading}
                 placeholder={placeholder}
                 value={selected}
                 onChange={handleChange}
                 styles={customStyles} // Apply custom styles
+                key={key}
             />
         </div>
     );

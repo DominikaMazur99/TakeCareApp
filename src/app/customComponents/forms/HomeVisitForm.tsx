@@ -2,9 +2,6 @@
 
 import React from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import InputComponent from "./fields/InputComponent";
-import { fetchOptionsFromAPI } from "@/app/helpers/api";
-import SelectComponent from "./fields/SelectComponent";
 import VisitForm from "./formParts/VisitForm";
 import PacientForm from "./formParts/PacientForm";
 
@@ -34,22 +31,18 @@ const HomeVisitForm: React.FC = () => {
             age: "",
             name: "",
             surname: "",
-            document: "",
-            passport: "PESEL",
+            document: "pesel",
+            passport: "",
             country: "",
             street: "",
             local: "",
             difadress: false,
         },
+        shouldUnregister: false,
     });
 
     const onSubmit = (data: FormData) => {
         console.log("Submit data:", data);
-    };
-
-    const getAllValues = () => {
-        const allValues = methods.getValues(); // Pobieranie danych z obu formularzy
-        console.log("Wszystkie wartości formularza:", allValues);
     };
 
     return (

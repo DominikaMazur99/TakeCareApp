@@ -9,9 +9,10 @@ interface SelectProps {
     name: string;
     label?: string;
     placeholder?: string;
-    fetchOptions: () => Promise<{ label: string; value: string | number }[]>;
+    options?: any;
     rules?: object;
     defaultValue?: { label: string; value: string | number };
+    key: string;
 }
 
 const SelectComponent: React.FC<SelectProps> = ({
@@ -19,31 +20,12 @@ const SelectComponent: React.FC<SelectProps> = ({
     name,
     label,
     placeholder = "Wybierz opcję",
-    fetchOptions,
+    options,
     rules,
     defaultValue,
+    key,
 }) => {
     const { control } = useFormContext();
-    const [options, setOptions] = useState<
-        { label: string; value: string | number }[]
-    >([]);
-    const [loading, setLoading] = useState<boolean>(true);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                const data = await fetchOptions();
-                setOptions(data);
-            } catch (error) {
-                console.error("Error fetching options:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, [fetchOptions]);
 
     const customStyles = {
         control: (provided: any, state: any) => ({
@@ -103,15 +85,18 @@ const SelectComponent: React.FC<SelectProps> = ({
                             id={id}
                             options={options}
                             placeholder={placeholder}
-                            isLoading={loading}
                             value={options.find(
-                                (option) => option.value === field.value
+                                (option: any) => option.value === field.value
                             )}
                             onChange={(selectedOption) =>
-                                field.onChange(selectedOption?.value)
+                                field.onChange(
+                                    selectedOption ? selectedOption.value : null
+                                )
                             }
                             styles={customStyles}
+                            key={key}
                         />
+
                         {fieldState.error && (
                             <span className="text-sm text-red-500">
                                 {fieldState.error.message}

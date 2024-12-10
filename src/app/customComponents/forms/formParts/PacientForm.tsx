@@ -1,29 +1,35 @@
 import React from "react";
-import SelectComponent from "../fields/SelectComponent";
 import InputComponent from "../fields/InputComponent";
 import { fetchOptionsFromAPI } from "@/app/helpers/api";
 import RadioButtonsComponent from "../fields/RadioButtonsComponent";
 import CheckboxComponent from "../fields/CheckboxComponent";
 import dynamic from "next/dynamic";
 import RadioButtonsInOne from "../fields/RadioButtonsInOne";
+import { useFormContext } from "react-hook-form";
+import { useSidebar } from "@/hooks/SidebarContext";
 
 const PacientForm: React.FC = () => {
-    const fetchSymptomsOptions = async () => {
-        return await fetchOptionsFromAPI({
-            url: "/api/symptoms",
-        });
-    };
+    const { options, loading } = useSidebar();
+    const { watch } = useFormContext(); // Używaj useFormContext zamiast useForm
+    const documentType = watch("document");
+
     const MultiSelectComponent = dynamic(
         () => import("../fields/MultiselectComponent"),
         {
             ssr: false,
         }
     );
+    const SelectComponent = dynamic(() => import("../fields/SelectComponent"), {
+        ssr: false,
+    });
     const fetchCountriesOptions = async () => {
         return await fetchOptionsFromAPI({
             url: "/api/countries",
         });
     };
+    if (loading) {
+        return <p>Ładowanie danych...</p>;
+    }
     return (
         <div id="patient-section" className="flex flex-col gap-6">
             <h3 className="text-[24px] text-textLabel font-small">Pacjent</h3>
@@ -63,27 +69,36 @@ const PacientForm: React.FC = () => {
                 </div>
             </div>
             <MultiSelectComponent
+                key="symptoms"
                 id="symptoms"
                 name="Symptoms"
                 label="Objawy"
-                fetchOptions={fetchSymptomsOptions}
+                options={options.symptoms}
             />
             <RadioButtonsInOne
                 name="document"
                 label="Dokument"
                 options={[
                     { label: "PESEL", value: "pesel" },
-                    { label: "Passport", value: "passport" },
+                    { label: "Paszport", value: "passport" },
                 ]}
                 rules={{
                     required: "Wybór jest wymagany.",
                 }}
             />
-            <InputComponent
-                id="passport"
-                name="passport"
-                placeholder="Paszport (pamietej zeby to poprawic)"
-            />
+            {documentType && documentType === "passport" ? (
+                <InputComponent
+                    id="passport"
+                    name="passport"
+                    placeholder="Wpisz numer paszportu"
+                />
+            ) : (
+                <InputComponent
+                    id="pesel"
+                    name={"pesel".toLowerCase()}
+                    placeholder="Wpisz numer PESEL"
+                />
+            )}
             <div>
                 <label
                     htmlFor=""
@@ -93,10 +108,11 @@ const PacientForm: React.FC = () => {
                 </label>
                 <div>
                     <SelectComponent
+                        key="country"
                         id="country"
                         name="country"
                         placeholder="Kraj"
-                        fetchOptions={fetchCountriesOptions}
+                        options={options.countries}
                     />
                 </div>
                 <div className="flex items-center gap-4 w-full">

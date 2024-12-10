@@ -1,37 +1,18 @@
 import React from "react";
-import SelectComponent from "../fields/SelectComponent";
 import InputComponent from "../fields/InputComponent";
 import { fetchOptionsFromAPI } from "@/app/helpers/api";
 import TextareaComponent from "../fields/TextareaComponent";
 import DatePickerComponent from "../fields/DatePickerComponent";
 import CheckboxComponent from "../fields/CheckboxComponent";
+import dynamic from "next/dynamic";
+import { useSidebar } from "@/hooks/SidebarContext";
 
 const VisitForm: React.FC = () => {
-    const fetchVisitsOptions = async () => {
-        return await fetchOptionsFromAPI({
-            url: "/api/visits",
-        });
-    };
-    const fetchSpecializationOptions = async () => {
-        return await fetchOptionsFromAPI({
-            url: "/api/specializations",
-        });
-    };
-    const fetchTopicOptions = async () => {
-        return await fetchOptionsFromAPI({
-            url: "/api/topic",
-        });
-    };
-    const fetchHoursOptions = async () => {
-        return await fetchOptionsFromAPI({
-            url: "/api/hours",
-        });
-    };
-    const fetchLanguagesOptions = async () => {
-        return await fetchOptionsFromAPI({
-            url: "/api/languages",
-        });
-    };
+    const { options, loading } = useSidebar();
+
+    const SelectComponent = dynamic(() => import("../fields/SelectComponent"), {
+        ssr: false,
+    });
     return (
         <div id="visit-section" className="flex flex-col gap-6">
             <h3 className="text-[24px] text-textLabel font-small">Wizyta</h3>
@@ -43,19 +24,21 @@ const VisitForm: React.FC = () => {
                 rules={{ required: "Pole wymagane." }}
             />
             <SelectComponent
+                key="visit-type"
                 id="visit-type"
                 name="Visit Type"
                 label="Rodzaj wizyty"
                 rules={{ required: "Pole wymagane." }}
-                fetchOptions={fetchVisitsOptions}
+                options={options.visits}
             />
             <SelectComponent
+                key="specialization"
                 id="specialization"
                 name="Specialization"
                 label="Specjalizacja"
                 placeholder="Wybierz z listy"
                 rules={{ required: "Pole wymagane." }}
-                fetchOptions={fetchSpecializationOptions}
+                options={options.specializations}
             />
 
             <DatePickerComponent
@@ -75,28 +58,31 @@ const VisitForm: React.FC = () => {
                 <div className="flex items-center gap-4 w-full">
                     <div className="w-1/2">
                         <SelectComponent
+                            key="from"
                             id="from"
                             name="From"
                             placeholder="Od"
-                            fetchOptions={fetchHoursOptions}
+                            options={options.hours}
                         />
                     </div>
                     <div className="w-1/2">
                         <SelectComponent
+                            key="to"
                             id="to"
                             name="To"
                             placeholder="Do"
-                            fetchOptions={fetchHoursOptions}
+                            options={options.hours}
                         />
                     </div>
                 </div>
             </div>
             <SelectComponent
+                key="topic"
                 id="topic"
                 name="Topic"
                 label="Temat"
                 placeholder="Wybierz z listy"
-                fetchOptions={fetchTopicOptions}
+                options={options.topics}
             />
             <TextareaComponent
                 id="additional"
@@ -105,12 +91,13 @@ const VisitForm: React.FC = () => {
                 placeholder="Opisz problem"
             />
             <SelectComponent
+                key="language"
                 id="language"
                 name="Language"
                 label="Język wizyty"
                 placeholder="Wybierz z listy"
                 rules={{ required: "Pole wymagane." }}
-                fetchOptions={fetchLanguagesOptions}
+                options={options.languages}
             />
         </div>
     );
