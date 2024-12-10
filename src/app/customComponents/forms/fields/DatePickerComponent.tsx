@@ -36,7 +36,7 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
             {label && (
                 <label
                     htmlFor={name}
-                    className="text-base text-textLabel font-medium"
+                    className="text-base text-textLabel font-hight"
                 >
                     {label}
                 </label>
@@ -57,7 +57,7 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
                             >
                                 <CalendarIcon className="mr-2 h-4 w-4" />
                                 {field.value ? (
-                                    format(new Date(field.value), "PPP")
+                                    format(new Date(field.value), "yyyy-MM-dd")
                                 ) : (
                                     <span>{placeholder}</span>
                                 )}
@@ -85,7 +85,6 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
                     </Popover>
                 )}
             />
-            <div className="h-px bg-gray-300"></div>
         </div>
     );
 };

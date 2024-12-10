@@ -22,7 +22,7 @@ const buttonVariants = cva(
                 error: "border-[1px] border-[#FF3414] text-[#FF3414]",
                 basic: "bg-[#0068FA] text-[#FEFEFE] border-[#0068FA] border-[1px]",
                 calendar:
-                    "bg-none text-[#6D7178] text-[16px] border-none placeholder:text-[#6D7178]",
+                    "bg-none text-[#6D7178] text-[16px] border-b border-gray-300  placeholder:text-[#6D7178]",
             },
             size: {
                 default: "h-9 px-4 py-2",

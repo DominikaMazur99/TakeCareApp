@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import InputComponent from "../fields/InputComponent";
 import RadioButtonsComponent from "../fields/RadioButtonsComponent";
 import CheckboxComponent from "../fields/CheckboxComponent";
@@ -10,6 +10,9 @@ import { useSidebar } from "@/hooks/SidebarContext";
 import MultiSelectComponent from "../fields/MultiselectComponent";
 import SelectComponent from "../fields/SelectComponent";
 import { idCardSchema, peselSchema } from "../../helpers/validators";
+import { peselToDate } from "../../helpers/helpers";
+import DatePickerComponent from "../fields/DatePickerComponent";
+import { format } from "date-fns";
 
 interface PacientFormProps {
     index: number; // Indeks formularza pacjenta w tablicy
@@ -17,9 +20,49 @@ interface PacientFormProps {
 
 const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
     const { options, loading } = useSidebar();
-    const { watch } = useFormContext();
+    const { watch, setValue } = useFormContext();
     const documentType = watch(`pacients.${index}.document`);
-    const secondAdress = watch(`pacients.${index}.difadress`);
+    const peselValue = watch(`pacients.${index}.pesel`);
+    const birthDate = watch(`pacients.${index}.birthDate`);
+    const secondAddress = watch(`pacients.${index}.difadress`);
+
+    useEffect(() => {
+        // Automatically set birth date from PESEL
+        if (peselValue && peselSchema.safeParse(peselValue).success) {
+            const derivedBirthDate = peselToDate(peselValue);
+            setValue(
+                `pacients.${index}.birthDate`,
+                format(derivedBirthDate, "yyyy-MM-dd")
+            );
+        }
+    }, [peselValue, index, setValue]);
+
+    useEffect(() => {
+        // Automatically set age based on birth date
+        if (birthDate) {
+            const birthYear = new Date(birthDate).getFullYear();
+            const currentYear = new Date().getFullYear();
+            const calculatedAge = currentYear - birthYear;
+            setValue(
+                `pacients.${index}.age`,
+                calculatedAge >= 18 ? "adult" : "child"
+            );
+        }
+    }, [birthDate, setValue, index]);
+
+    useEffect(() => {
+        // Automatically adjust age radio button based on PESEL
+        if (peselValue && peselSchema.safeParse(peselValue).success) {
+            const derivedBirthDate = peselToDate(peselValue);
+            const birthYear = derivedBirthDate.getFullYear();
+            const currentYear = new Date().getFullYear();
+            const calculatedAge = currentYear - birthYear;
+            setValue(
+                `pacients.${index}.age`,
+                calculatedAge >= 18 ? "adult" : "child"
+            );
+        }
+    }, [peselValue, setValue, index]);
 
     if (loading) {
         return <p>Ładowanie danych...</p>;
@@ -98,20 +141,31 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                     }}
                 />
             ) : (
-                <InputComponent
-                    id={`pacients-${index}-pesel`}
-                    name={`pacients.${index}.pesel`}
-                    placeholder="Wpisz numer PESEL"
-                    rules={{
-                        validate: (value: any) => {
-                            const validation = peselSchema.safeParse(value);
-                            return (
-                                validation.success ||
-                                validation.error.errors[0].message
-                            );
-                        },
-                    }}
-                />
+                <div className="flex items-center gap-4 w-full">
+                    <div className="w-1/2">
+                        <InputComponent
+                            id={`pacients-${index}-pesel`}
+                            name={`pacients.${index}.pesel`}
+                            placeholder="Wpisz numer PESEL"
+                            rules={{
+                                validate: (value: any) => {
+                                    const validation =
+                                        peselSchema.safeParse(value);
+                                    return (
+                                        validation.success ||
+                                        validation.error.errors[0].message
+                                    );
+                                },
+                            }}
+                        />
+                    </div>
+                    <div className="w-1/2">
+                        <DatePickerComponent
+                            name={`pacients.${index}.birthDate`}
+                            placeholder="Data urodzenia"
+                        />
+                    </div>
+                </div>
             )}
             {index === 0 && (
                 <>
@@ -154,7 +208,7 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                 </>
             )}
 
-            {secondAdress && index === 0 && (
+            {secondAddress && index === 0 && (
                 <div>
                     <label
                         htmlFor={`pacients-${index}-address-2`}

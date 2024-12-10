@@ -1,25 +1,55 @@
 import React, { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import InputComponent from "../fields/InputComponent";
-import { fetchOptionsFromAPI } from "@/app/helpers/api";
+import SelectComponent from "../fields/SelectComponent";
 import TextareaComponent from "../fields/TextareaComponent";
 import DatePickerComponent from "../fields/DatePickerComponent";
 import CheckboxComponent from "../fields/CheckboxComponent";
-import dynamic from "next/dynamic";
 import { useSidebar } from "@/hooks/SidebarContext";
-import SelectComponent from "../fields/SelectComponent";
-import { useFormContext } from "react-hook-form";
 
 const VisitForm: React.FC = () => {
     const { options } = useSidebar();
     const [isClient, setIsClient] = useState(false);
-    const { watch } = useFormContext(); // Używaj useFormContext zamiast useForm
+    const { watch, setValue, getValues } = useFormContext(); // Additional hooks for validation
     const showHoursRange = watch("hoursrange");
+    const visitDate = watch("Visit Date");
+    const fromTime = watch("From");
 
     useEffect(() => {
-        setIsClient(true); // Ustaw flagę po załadowaniu klienta
+        setIsClient(true); // Flag after client load
     }, []);
 
-    if (!isClient) return null; // Zatrzymaj renderowanie na serwerze
+    // Dynamic hours for "From" and "To"
+    const generateFromOptions = () => {
+        const currentDate = new Date();
+        if (visitDate) {
+            const selectedDate = new Date(visitDate);
+            if (selectedDate.toDateString() === currentDate.toDateString()) {
+                const currentHour = Math.ceil(
+                    currentDate.getHours() + currentDate.getMinutes() / 60
+                );
+                const startHour = Math.min(currentHour + 2, 22);
+                return Array.from({ length: 22 - startHour + 1 }, (_, i) => ({
+                    label: `${startHour + i}:00`,
+                    value: `${startHour + i}:00`,
+                }));
+            }
+        }
+        return Array.from({ length: 23 }, (_, i) => ({
+            label: `${i}:00`,
+            value: `${i}:00`,
+        }));
+    };
+
+    const generateToOptions = () => {
+        const fromHour = fromTime ? parseInt(fromTime.split(":")[0]) + 1 : 0;
+        return Array.from({ length: 24 - fromHour }, (_, i) => ({
+            label: `${fromHour + i}:00`,
+            value: `${fromHour + i}:00`,
+        }));
+    };
+
+    if (!isClient) return null; // Prevent server rendering
 
     return (
         <div id="visit-section" className="flex flex-col gap-6">
@@ -57,7 +87,18 @@ const VisitForm: React.FC = () => {
                 name="Visit Date"
                 label="Data wizyty"
                 placeholder="Data wizyty"
-                rules={{ required: "Pole wymagane." }}
+                rules={{
+                    required: "Pole wymagane.",
+                    validate: (value: Date) => {
+                        const today = new Date();
+                        const maxDate = new Date();
+                        maxDate.setDate(today.getDate() + 3);
+                        if (!value || value < today || value > maxDate) {
+                            return "Wybierz datę w zakresie od dzisiaj do 3 dni.";
+                        }
+                        return true;
+                    },
+                }}
             />
             <CheckboxComponent
                 name="hoursrange"
@@ -77,7 +118,10 @@ const VisitForm: React.FC = () => {
                                         id="from"
                                         name="From"
                                         placeholder="Od"
-                                        options={options.hours || []}
+                                        options={generateFromOptions()}
+                                        rules={{
+                                            required: "Pole wymagane.",
+                                        }}
                                     />
                                 </div>
                                 <div className="w-1/2">
@@ -86,7 +130,17 @@ const VisitForm: React.FC = () => {
                                         id="to"
                                         name="To"
                                         placeholder="Do"
-                                        options={options.hours || []}
+                                        options={generateToOptions()}
+                                        rules={{
+                                            required: "Pole wymagane.",
+                                            validate: (value: string) => {
+                                                const from = getValues("From");
+                                                if (from && value <= from) {
+                                                    return "Godzina 'Do' musi być późniejsza niż 'Od'.";
+                                                }
+                                                return true;
+                                            },
+                                        }}
                                     />
                                 </div>
                             </>
