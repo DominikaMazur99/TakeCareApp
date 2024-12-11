@@ -48,7 +48,7 @@ const AccordionComponent: React.FC<AccordionComponentProps> = ({
         >
             <AccordionPrimitive.Item
                 value="main"
-                className="border-b last:border-none"
+                className="border-b last:border-none after:content-[''] after:block after:h-px after:bg-gray-300 after:mt-1"
             >
                 <AccordionPrimitive.Header className="flex">
                     <AccordionPrimitive.Trigger
@@ -61,13 +61,16 @@ const AccordionComponent: React.FC<AccordionComponentProps> = ({
                         <ChevronDown className="h-4 w-4 shrink-0 text-sm text-[#242628] font-[500] transition-transform duration-200" />
                     </AccordionPrimitive.Trigger>
                 </AccordionPrimitive.Header>
+
                 <AccordionPrimitive.Content className="overflow-hidden text-sm text-[#242628] font-[500] data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
+                    <div className="h-px bg-gray-300"></div>
+
                     <AccordionPrimitive.Root type="multiple" className="pl-4">
                         {data.map((item, index) => (
                             <AccordionPrimitive.Item
                                 key={index}
                                 value={item.title}
-                                className="border-b last:border-none"
+                                className=""
                             >
                                 <AccordionPrimitive.Header className="flex">
                                     <AccordionPrimitive.Trigger
@@ -81,7 +84,7 @@ const AccordionComponent: React.FC<AccordionComponentProps> = ({
                                 </AccordionPrimitive.Header>
                                 {item.subItems && (
                                     <AccordionPrimitive.Content className="overflow-hidden text-sm text-[#242628] font-[500] data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
-                                        <ul className="py-1 px-4 text-sm text-[#242628] font-[500] space-y-2">
+                                        <ul className="py-1 px-4 text-sm text-[#242628] font-[500]">
                                             {item.subItems.map(
                                                 (subItem, subIndex) => (
                                                     <li key={subIndex}>
