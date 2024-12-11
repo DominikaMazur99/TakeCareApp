@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useForm, FormProvider, useFieldArray } from "react-hook-form";
 import VisitForm from "./formParts/VisitForm";
 import PacientForm from "./formParts/PacientForm";
@@ -9,6 +9,8 @@ import { createFormSchema } from "../helpers/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSidebar } from "@/hooks/SidebarContext";
 import { useTranslation } from "react-i18next";
+import LoadingComponent from "../ui/LoadingComponent";
+import AlertComponent from "../ui/AlertComponent";
 
 interface Pacient {
     id: number;
@@ -43,6 +45,8 @@ interface HomeVisitFormProps {
 const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
     const { t } = useTranslation();
     const { selectedSection } = useSidebar();
+    const [formsLoaded, setFormsLoaded] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
     const formSchema = createFormSchema(t);
 
     const methods = useForm<FormData>({
@@ -102,7 +106,7 @@ const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
 
             updateAccordion(newIndex);
         } else {
-            alert("Możesz dodać maksymalnie 6 pacjentów.");
+            setShowAlert(true);
         }
     };
 
@@ -117,52 +121,79 @@ const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
         setValue("visitType", visitType);
     }, [selectedSection, setValue]);
 
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setFormsLoaded(true);
+        }, 300);
+        return () => clearTimeout(timeout);
+    }, [fields]);
+
     return (
-        <FormProvider {...methods}>
-            <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="border border-gray-300 rounded-md p-10 gap-6 flex flex-col bg-white w-full h-full relative"
-            >
-                <Suspense fallback={<p>Loading VisitForm...</p>}>
-                    <VisitForm />
-                </Suspense>
-                <Suspense fallback={<p>Loading PacientForms...</p>}>
-                    {fields.map((field, index) => (
-                        <div
-                            key={field.id}
-                            className="relative"
-                            id={`patients-${index}`}
-                        >
-                            <PacientForm index={index} />
-                            {fields.length > 1 && index > 0 && (
+        <>
+            <FormProvider {...methods}>
+                {formsLoaded ? (
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="border border-gray-300 rounded-md p-10 gap-6 flex flex-col bg-white w-full h-full relative"
+                    >
+                        <Suspense fallback={<LoadingComponent />}>
+                            <VisitForm />
+                        </Suspense>
+                        <Suspense fallback={<LoadingComponent />}>
+                            {fields.map((field, index) => (
+                                <div
+                                    key={field.id}
+                                    className="relative"
+                                    id={`patients-${index}`}
+                                >
+                                    <PacientForm index={index} />
+                                    {fields.length > 1 && index > 0 && (
+                                        <button
+                                            type="button"
+                                            onClick={() => remove(index)}
+                                            className="absolute top-2 right-2"
+                                        >
+                                            <X color="red" />
+                                        </button>
+                                    )}
+                                </div>
+                            ))}
+                        </Suspense>
+
+                        {formsLoaded && (
+                            <>
                                 <button
                                     type="button"
-                                    onClick={() => remove(index)}
-                                    className="absolute top-2 right-2"
+                                    onClick={handleAddPacient}
+                                    className="text-blue-500 bg-white border-blue-500 border-[1px] px-4 py-2 rounded-md"
                                 >
-                                    <X color="red" />
+                                    {t("btn.patient")}
                                 </button>
-                            )}
-                        </div>
-                    ))}
-                </Suspense>
-                <button
-                    type="button"
-                    onClick={handleAddPacient}
-                    className="text-blue-500 bg-white border-blue-500 border-[1px] px-4 py-2 rounded-md"
-                >
-                    {t("btn.patient")}
-                </button>
 
-                <button
-                    type="submit"
-                    className="flex items-center justify-center bg-blue-500 border-blue-500 border-[1px] text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-all"
-                >
-                    <span className="mr-2">{t("btn.next")}</span>
-                    <ChevronRight className="w-5 h-5" />
-                </button>
-            </form>
-        </FormProvider>
+                                <button
+                                    type="submit"
+                                    className="flex items-center justify-center bg-blue-500 border-blue-500 border-[1px] text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-all"
+                                >
+                                    <span className="mr-2">
+                                        {t("btn.next")}
+                                    </span>
+                                    <ChevronRight className="w-5 h-5" />
+                                </button>
+                            </>
+                        )}
+                    </form>
+                ) : (
+                    <LoadingComponent />
+                )}
+            </FormProvider>
+            <AlertComponent
+                message={t("alert.patient")}
+                type="error"
+                duration={3000}
+                isOpen={showAlert}
+                onClose={() => setShowAlert(false)}
+            />
+        </>
     );
 };
 

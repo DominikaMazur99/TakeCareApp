@@ -9,29 +9,29 @@ import { useMenuItems } from "../helpers/data";
 const SideBarComponent: React.FC = () => {
     const { menuItems, settingsItems, logoutItems } = useMenuItems();
     return (
-        <div className="flex flex-col h-[calc(100vh-150px)]">
-            <div className="flex-1 flex flex-col justify-between bg-white shadow-md p-6 rounded-md overflow-auto">
+        <div className="grid grid-rows-[80%_20%] h-[calc(100vh-110px)]">
+            <div className="bg-white shadow-md p-6 rounded-md overflow-auto">
                 <div>
                     <UserCard
                         name={"Joe Doe"}
                         job={"Operator"}
                         email={"joe@doe.pl"}
                     />
-                    <div className="my-4 h-px bg-gray-300"></div>
+                    <div className="my-2 h-px bg-gray-300"></div>
                 </div>
                 <div>
                     <ListComponent elements={menuItems} />
-                    <div className="my-4 h-px bg-gray-300"></div>
+                    <div className="my-2 h-px bg-gray-300"></div>
                 </div>
                 <div>
                     <ListComponent elements={settingsItems} />
-                    <div className="my-4 h-px bg-gray-300"></div>
+                    <div className="my-2 h-px bg-gray-300"></div>
                 </div>
                 <div>
                     <ListComponent elements={logoutItems} />
                 </div>
             </div>
-            <div className="flex-shrink-0 py-4">
+            <div className=" py-3 flex items-center justify-center ">
                 <Footer />
             </div>
         </div>

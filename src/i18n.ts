@@ -82,6 +82,8 @@ i18n.use(initReactI18next).init({
                 "validation.timeRange":
                     "'To' time must be later than 'From' time.",
                 "validation.minPacient": "Add at least one patient.",
+                "loading.message": "Loading...",
+                "alert.patient": "You can add 6 patients maximum!",
             },
         },
         pl: {
@@ -167,6 +169,8 @@ i18n.use(initReactI18next).init({
                 "validation.timeRange":
                     "Godzina 'Do' musi być późniejsza niż 'Od'.",
                 "validation.minPacient": "Dodaj co najmniej jednego pacjenta.",
+                "loading.message": "Trwa ładowanie...",
+                "alert.patient": "Możesz dodać maksymalnie 6 pacjentów!",
             },
         },
     },

@@ -32,7 +32,7 @@ const ListComponent: React.FC<ListComponentProps> = ({ elements }) => {
                                     isSelected
                                         ? "text-[#0068FA]"
                                         : "text-gray-700"
-                                } p-2`}
+                                } p-1`}
                                 onClick={() =>
                                     setSelectedSection(
                                         item.path.split("/").pop()!
