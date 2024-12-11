@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect } from "react";
 import InputComponent from "../fields/InputComponent";
 import RadioButtonsComponent from "../fields/RadioButtonsComponent";
@@ -9,36 +7,38 @@ import { useFormContext } from "react-hook-form";
 import { useSidebar } from "@/hooks/SidebarContext";
 import MultiSelectComponent from "../fields/MultiselectComponent";
 import SelectComponent from "../fields/SelectComponent";
-import { idCardSchema, peselSchema } from "../../helpers/validators";
-import { peselToDate } from "../../helpers/helpers";
 import DatePickerComponent from "../fields/DatePickerComponent";
 import { format } from "date-fns";
+import { peselToDate } from "../../helpers/helpers";
 
 interface PacientFormProps {
-    index: number; // Indeks formularza pacjenta w tablicy
+    index: number;
 }
 
 const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
-    const { options, loading } = useSidebar();
-    const { watch, setValue } = useFormContext();
+    const { options } = useSidebar();
+    const { watch, setValue, trigger } = useFormContext();
     const documentType = watch(`pacients.${index}.document`);
     const peselValue = watch(`pacients.${index}.pesel`);
     const birthDate = watch(`pacients.${index}.birthDate`);
     const secondAddress = watch(`pacients.${index}.difadress`);
 
     useEffect(() => {
-        // Automatically set birth date from PESEL
-        if (peselValue && peselSchema.safeParse(peselValue).success) {
-            const derivedBirthDate = peselToDate(peselValue);
-            setValue(
-                `pacients.${index}.birthDate`,
-                format(derivedBirthDate, "yyyy-MM-dd")
-            );
+        if (peselValue) {
+            try {
+                const derivedBirthDate = peselToDate(peselValue);
+                setValue(
+                    `pacients.${index}.birthDate`,
+                    format(derivedBirthDate, "yyyy-MM-dd")
+                );
+                trigger(`pacients.${index}.birthDate`); // Trigger validation on sync
+            } catch {
+                setValue(`pacients.${index}.birthDate`, ""); // Clear if invalid
+            }
         }
-    }, [peselValue, index, setValue]);
+    }, [peselValue, setValue, index, trigger]);
 
     useEffect(() => {
-        // Automatically set age based on birth date
         if (birthDate) {
             const birthYear = new Date(birthDate).getFullYear();
             const currentYear = new Date().getFullYear();
@@ -49,24 +49,6 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
             );
         }
     }, [birthDate, setValue, index]);
-
-    useEffect(() => {
-        // Automatically adjust age radio button based on PESEL
-        if (peselValue && peselSchema.safeParse(peselValue).success) {
-            const derivedBirthDate = peselToDate(peselValue);
-            const birthYear = derivedBirthDate.getFullYear();
-            const currentYear = new Date().getFullYear();
-            const calculatedAge = currentYear - birthYear;
-            setValue(
-                `pacients.${index}.age`,
-                calculatedAge >= 18 ? "adult" : "child"
-            );
-        }
-    }, [peselValue, setValue, index]);
-
-    if (loading) {
-        return <p>Ładowanie danych...</p>;
-    }
 
     return (
         <div id={`patient-section-${index}`} className="flex flex-col gap-6">
@@ -80,15 +62,9 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                     { label: "Dorosły", value: "adult" },
                     { label: "Dziecko", value: "child" },
                 ]}
-                rules={{
-                    required: "Wybór jest wymagany.",
-                }}
             />
             <div>
-                <label
-                    htmlFor={`pacients-${index}-data`}
-                    className="block text-base text-textLabel font-hight mb-2"
-                >
+                <label className="block text-base text-textLabel font-hight mb-2">
                     Dane Pacjenta
                 </label>
                 <div className="flex items-center gap-4 w-full">
@@ -121,24 +97,12 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                     { label: "PESEL", value: "pesel" },
                     { label: "Paszport", value: "passport" },
                 ]}
-                rules={{
-                    required: "Wybór jest wymagany.",
-                }}
             />
             {documentType === "passport" ? (
                 <InputComponent
                     id={`pacients-${index}-passport`}
                     name={`pacients.${index}.passport`}
                     placeholder="Wpisz numer paszportu"
-                    rules={{
-                        validate: (value: any) => {
-                            const validation = idCardSchema.safeParse(value);
-                            return (
-                                validation.success ||
-                                validation.error.errors[0].message
-                            );
-                        },
-                    }}
                 />
             ) : (
                 <div className="flex items-center gap-4 w-full">
@@ -147,16 +111,6 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                             id={`pacients-${index}-pesel`}
                             name={`pacients.${index}.pesel`}
                             placeholder="Wpisz numer PESEL"
-                            rules={{
-                                validate: (value: any) => {
-                                    const validation =
-                                        peselSchema.safeParse(value);
-                                    return (
-                                        validation.success ||
-                                        validation.error.errors[0].message
-                                    );
-                                },
-                            }}
                         />
                     </div>
                     <div className="w-1/2">
@@ -170,20 +124,15 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
             {index === 0 && (
                 <>
                     <div>
-                        <label
-                            htmlFor={`pacients-${index}-address`}
-                            className="block text-base text-textLabel font-hight mb-2"
-                        >
+                        <label className="block text-base text-textLabel font-hight mb-2">
                             Dane adresowe
                         </label>
-                        <div>
-                            <SelectComponent
-                                id={`pacients-${index}-country`}
-                                name={`pacients.${index}.country`}
-                                placeholder="Kraj"
-                                options={options.countries || []}
-                            />
-                        </div>
+                        <SelectComponent
+                            id={`pacients-${index}-country`}
+                            name={`pacients.${index}.country`}
+                            placeholder="Kraj"
+                            options={options.countries || []}
+                        />
                         <div className="flex items-center gap-4 w-full">
                             <div className="w-1/2">
                                 <InputComponent
@@ -193,6 +142,7 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                                 />
                             </div>
                             <div className="w-1/2">
+                                {" "}
                                 <InputComponent
                                     id={`pacients-${index}-local`}
                                     name={`pacients.${index}.local`}
@@ -210,35 +160,26 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
 
             {secondAddress && index === 0 && (
                 <div>
-                    <label
-                        htmlFor={`pacients-${index}-address-2`}
-                        className="block text-base text-textLabel font-hight mb-2"
-                    >
+                    <label className="block text-base text-textLabel font-hight mb-2">
                         Dane adresowe (2)
                     </label>
-                    <div>
-                        <SelectComponent
-                            id={`pacients-${index}-country-2`}
-                            name={`pacients.${index}.secondCountry`}
-                            placeholder="Kraj"
-                            options={options.countries || []}
-                        />
-                    </div>
+                    <SelectComponent
+                        id={`pacients-${index}-country-2`}
+                        name={`pacients.${index}.secondCountry`}
+                        placeholder="Kraj"
+                        options={options.countries || []}
+                    />
                     <div className="flex items-center gap-4 w-full">
-                        <div className="w-1/2">
-                            <InputComponent
-                                id={`pacients-${index}-street-2`}
-                                name={`pacients.${index}.secondStreet`}
-                                placeholder="Ulica"
-                            />
-                        </div>
-                        <div className="w-1/2">
-                            <InputComponent
-                                id={`pacients-${index}-local-2`}
-                                name={`pacients.${index}.secondLocal`}
-                                placeholder="Numer lokalu"
-                            />
-                        </div>
+                        <InputComponent
+                            id={`pacients-${index}-street-2`}
+                            name={`pacients.${index}.secondStreet`}
+                            placeholder="Ulica"
+                        />
+                        <InputComponent
+                            id={`pacients-${index}-local-2`}
+                            name={`pacients.${index}.secondLocal`}
+                            placeholder="Numer lokalu"
+                        />
                     </div>
                 </div>
             )}

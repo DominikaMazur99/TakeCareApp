@@ -5,6 +5,8 @@ import { useForm, FormProvider, useFieldArray } from "react-hook-form";
 import VisitForm from "./formParts/VisitForm";
 import PacientForm from "./formParts/PacientForm";
 import { X } from "lucide-react";
+import { formSchema } from "../helpers/validators";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface Pacient {
     id: number;
@@ -34,6 +36,8 @@ interface FormData {
 
 const HomeVisitForm: React.FC = () => {
     const methods = useForm<FormData>({
+        resolver: zodResolver(formSchema),
+        mode: "onBlur",
         defaultValues: {
             numberOfIssue: "",
             visitType: "Wizyta domowa",
@@ -58,7 +62,7 @@ const HomeVisitForm: React.FC = () => {
         },
     });
 
-    const { control, handleSubmit, watch } = methods;
+    const { control, handleSubmit } = methods;
     const { fields, append, remove } = useFieldArray({
         control,
         name: "pacients",

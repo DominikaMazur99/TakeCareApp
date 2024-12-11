@@ -10,9 +10,9 @@ import { useSidebar } from "@/hooks/SidebarContext";
 const VisitForm: React.FC = () => {
     const { options } = useSidebar();
     const [isClient, setIsClient] = useState(false);
-    const { watch, setValue, getValues } = useFormContext(); // Additional hooks for validation
+    const { watch, setValue } = useFormContext(); // Additional hooks for validation
     const showHoursRange = watch("hoursrange");
-    const visitDate = watch("Visit Date");
+    const visitDate = watch("visitDate");
     const fromTime = watch("From");
 
     useEffect(() => {
@@ -84,21 +84,9 @@ const VisitForm: React.FC = () => {
             )}
 
             <DatePickerComponent
-                name="Visit Date"
+                name="visitDate"
                 label="Data wizyty"
                 placeholder="Data wizyty"
-                rules={{
-                    required: "Pole wymagane.",
-                    validate: (value: Date) => {
-                        const today = new Date();
-                        const maxDate = new Date();
-                        maxDate.setDate(today.getDate() + 3);
-                        if (!value || value < today || value > maxDate) {
-                            return "Wybierz datę w zakresie od dzisiaj do 3 dni.";
-                        }
-                        return true;
-                    },
-                }}
             />
             <CheckboxComponent
                 name="hoursrange"
@@ -119,9 +107,6 @@ const VisitForm: React.FC = () => {
                                         name="From"
                                         placeholder="Od"
                                         options={generateFromOptions()}
-                                        rules={{
-                                            required: "Pole wymagane.",
-                                        }}
                                     />
                                 </div>
                                 <div className="w-1/2">
@@ -131,16 +116,6 @@ const VisitForm: React.FC = () => {
                                         name="To"
                                         placeholder="Do"
                                         options={generateToOptions()}
-                                        rules={{
-                                            required: "Pole wymagane.",
-                                            validate: (value: string) => {
-                                                const from = getValues("From");
-                                                if (from && value <= from) {
-                                                    return "Godzina 'Do' musi być późniejsza niż 'Od'.";
-                                                }
-                                                return true;
-                                            },
-                                        }}
                                     />
                                 </div>
                             </>
@@ -171,7 +146,6 @@ const VisitForm: React.FC = () => {
                     name="Language"
                     label="Język wizyty"
                     placeholder="Wybierz z listy"
-                    rules={{ required: "Pole wymagane." }}
                     options={options.languages || []}
                 />
             )}

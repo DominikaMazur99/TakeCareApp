@@ -51,7 +51,7 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
                             <Button
                                 variant={"calendar"}
                                 className={cn(
-                                    "w-full justify-start text-left p-0 placeholder:text-base placeholder:text-textHover",
+                                    "w-full justify-start text-left text-textHover] p-0 placeholder:text-textHover",
                                     !field.value && "text-muted-foreground"
                                 )}
                             >
@@ -59,7 +59,9 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
                                 {field.value ? (
                                     format(new Date(field.value), "yyyy-MM-dd")
                                 ) : (
-                                    <span>{placeholder}</span>
+                                    <span className="text-textHover">
+                                        {placeholder}
+                                    </span>
                                 )}
                             </Button>
                         </PopoverTrigger>
