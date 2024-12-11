@@ -28,6 +28,7 @@ const TextareaComponent: React.FC<TextareaProps> = ({
         <div className={`flex flex-col gap-1 ${className}`}>
             {label && (
                 <label
+                    id={id}
                     htmlFor={name}
                     className="text-base text-textLabel font-bold"
                 >

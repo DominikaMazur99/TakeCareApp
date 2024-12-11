@@ -23,13 +23,17 @@ const AccordionComponent: React.FC<AccordionComponentProps> = ({
 }) => {
     const handleScrollTo = (targetId?: string) => {
         if (targetId) {
-            const targetElement = document.getElementById(targetId);
-            if (targetElement) {
-                targetElement.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                });
-            }
+            setTimeout(() => {
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                    });
+                } else {
+                    console.warn("Element not found for ID:", targetId);
+                }
+            }, 100); // Opóźnienie na wyrenderowanie elementu
         }
     };
 

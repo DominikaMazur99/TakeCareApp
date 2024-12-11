@@ -82,12 +82,13 @@ const VisitForm: React.FC = () => {
                     />
                 </>
             )}
-
-            <DatePickerComponent
-                name="visitDate"
-                label="Data wizyty"
-                placeholder="Data wizyty"
-            />
+            <div id={`visit-date`}>
+                <DatePickerComponent
+                    name="visitDate"
+                    label="Data wizyty"
+                    placeholder="Data wizyty"
+                />
+            </div>
             <CheckboxComponent
                 name="hoursrange"
                 label="Wybierz konkretny przedział godzinowy"

@@ -34,7 +34,11 @@ interface FormData {
     pacients: Pacient[]; // Tablica pacjentów
 }
 
-const HomeVisitForm: React.FC = () => {
+interface HomeVisitFormProps {
+    updateAccordion: (index: number) => void; // Funkcja aktualizująca Accordion
+}
+
+const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
     const methods = useForm<FormData>({
         resolver: zodResolver(formSchema),
         mode: "onBlur",
@@ -68,16 +72,15 @@ const HomeVisitForm: React.FC = () => {
         name: "pacients",
     });
 
-    const [loading, setLoading] = useState(true); // Loading state
-
     const onSubmit = (data: FormData) => {
         console.log("Submit data:", data);
     };
 
     const handleAddPacient = () => {
-        if (fields.length < 6) {
+        const newIndex = fields.length;
+        if (newIndex < 6) {
             append({
-                id: fields.length + 1,
+                id: newIndex + 1,
                 age: "",
                 name: "",
                 surname: "",
@@ -90,36 +93,13 @@ const HomeVisitForm: React.FC = () => {
                 symptoms: [],
                 difadress: false,
             });
+
+            // Aktualizacja Accordion
+            updateAccordion(newIndex);
         } else {
             alert("Możesz dodać maksymalnie 6 pacjentów.");
         }
     };
-
-    const handleRemovePacient = (index: number) => {
-        remove(index);
-    };
-
-    // Simulate a loader
-    React.useEffect(() => {
-        const timeout = setTimeout(() => {
-            setLoading(false);
-        }, 1000); // Simulate 1-second load time
-
-        return () => clearTimeout(timeout);
-    }, []);
-
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <div
-                    className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"
-                    role="status"
-                >
-                    <span className="sr-only">Loading...</span>
-                </div>
-            </div>
-        );
-    }
 
     return (
         <FormProvider {...methods}>
@@ -134,12 +114,16 @@ const HomeVisitForm: React.FC = () => {
                 {/* Dynamic rendering of PacientForm */}
                 <Suspense fallback={<p>Loading PacientForms...</p>}>
                     {fields.map((field, index) => (
-                        <div key={field.id} className="relative ">
+                        <div
+                            key={field.id}
+                            className="relative"
+                            id={`patients-${index}`}
+                        >
                             <PacientForm index={index} />
                             {fields.length > 1 && index > 0 && (
                                 <button
                                     type="button"
-                                    onClick={() => handleRemovePacient(index)}
+                                    onClick={() => remove(index)}
                                     className="absolute top-2 right-2"
                                 >
                                     <X color="red" />

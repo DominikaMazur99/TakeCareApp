@@ -63,6 +63,7 @@ const SelectComponent: React.FC<SelectProps> = ({
         <div className="flex flex-col gap-1">
             {label && (
                 <label
+                    id={id}
                     htmlFor={name}
                     className="text-base text-textLabel font-hight"
                 >
@@ -77,7 +78,6 @@ const SelectComponent: React.FC<SelectProps> = ({
                     <div>
                         <Select
                             {...field}
-                            id={id}
                             inputId={`${id}-input`}
                             options={options || []}
                             placeholder={placeholder}

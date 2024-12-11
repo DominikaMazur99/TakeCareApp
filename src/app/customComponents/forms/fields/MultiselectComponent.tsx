@@ -75,6 +75,7 @@ const MultiSelectComponent: React.FC<MultiSelectProps> = ({
         <div className={`flex flex-col gap-1 ${className}`} id={id}>
             {label && (
                 <label
+                    id={id}
                     htmlFor={name || id}
                     className="text-base text-textLabel font-hight"
                 >
@@ -82,7 +83,6 @@ const MultiSelectComponent: React.FC<MultiSelectProps> = ({
                 </label>
             )}
             <Select
-                id={id}
                 inputId={`${id}-input`}
                 isMulti
                 options={options || []}

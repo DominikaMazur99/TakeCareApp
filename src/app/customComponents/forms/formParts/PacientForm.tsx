@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import InputComponent from "../fields/InputComponent";
 import RadioButtonsComponent from "../fields/RadioButtonsComponent";
 import CheckboxComponent from "../fields/CheckboxComponent";
@@ -22,6 +22,11 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
     const peselValue = watch(`pacients.${index}.pesel`);
     const birthDate = watch(`pacients.${index}.birthDate`);
     const secondAddress = watch(`pacients.${index}.difadress`);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true); // Flag after client load
+    }, []);
 
     useEffect(() => {
         if (peselValue) {
@@ -50,21 +55,28 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
         }
     }, [birthDate, setValue, index]);
 
+    if (!isClient) return null;
+
     return (
         <div id={`patient-section-${index}`} className="flex flex-col gap-6">
             <h3 className="text-[24px] text-[#112950] font-[300]">
                 {index === 0 ? `Pacjent` : `Pacjent ${index + 1}`}
             </h3>
-            <RadioButtonsComponent
-                name={`pacients.${index}.age`}
-                label="Wiek pacjenta"
-                options={[
-                    { label: "Dorosły", value: "adult" },
-                    { label: "Dziecko", value: "child" },
-                ]}
-            />
+            <div id={`pacients-${index}-age`}>
+                <RadioButtonsComponent
+                    name={`pacients.${index}.age`}
+                    label="Wiek pacjenta"
+                    options={[
+                        { label: "Dorosły", value: "adult" },
+                        { label: "Dziecko", value: "child" },
+                    ]}
+                />
+            </div>
             <div>
-                <label className="block text-base text-textLabel font-hight mb-2">
+                <label
+                    className="block text-base text-textLabel font-hight mb-2"
+                    id={`pacients-${index}-pacient`}
+                >
                     Dane Pacjenta
                 </label>
                 <div className="flex items-center gap-4 w-full">
@@ -84,12 +96,14 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                     </div>
                 </div>
             </div>
-            <MultiSelectComponent
-                id={`pacients-${index}-symptoms`}
-                name={`pacients.${index}.symptoms`}
-                label="Objawy"
-                options={options.symptoms || []}
-            />
+            {isClient && (
+                <MultiSelectComponent
+                    id={`pacients-${index}-symptoms`}
+                    name={`pacients.${index}.symptoms`}
+                    label="Objawy"
+                    options={options.symptoms || []}
+                />
+            )}
             <RadioButtonsInOne
                 name={`pacients.${index}.document`}
                 label="Dokument"
@@ -124,15 +138,20 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
             {index === 0 && (
                 <>
                     <div>
-                        <label className="block text-base text-textLabel font-hight mb-2">
+                        <label
+                            className="block text-base text-textLabel font-hight mb-2"
+                            id={`pacients-${index}-adress`}
+                        >
                             Dane adresowe
                         </label>
-                        <SelectComponent
-                            id={`pacients-${index}-country`}
-                            name={`pacients.${index}.country`}
-                            placeholder="Kraj"
-                            options={options.countries || []}
-                        />
+                        {isClient && (
+                            <SelectComponent
+                                id={`pacients-${index}-country`}
+                                name={`pacients.${index}.country`}
+                                placeholder="Kraj"
+                                options={options.countries || []}
+                            />
+                        )}
                         <div className="flex items-center gap-4 w-full">
                             <div className="w-1/2">
                                 <InputComponent
@@ -163,12 +182,14 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                     <label className="block text-base text-textLabel font-hight mb-2">
                         Dane adresowe (2)
                     </label>
-                    <SelectComponent
-                        id={`pacients-${index}-country-2`}
-                        name={`pacients.${index}.secondCountry`}
-                        placeholder="Kraj"
-                        options={options.countries || []}
-                    />
+                    {isClient && (
+                        <SelectComponent
+                            id={`pacients-${index}-country-2`}
+                            name={`pacients.${index}.secondCountry`}
+                            placeholder="Kraj"
+                            options={options.countries || []}
+                        />
+                    )}
                     <div className="flex items-center gap-4 w-full">
                         <InputComponent
                             id={`pacients-${index}-street-2`}
