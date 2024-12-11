@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { useForm, FormProvider, useFieldArray } from "react-hook-form";
 import VisitForm from "./formParts/VisitForm";
 import PacientForm from "./formParts/PacientForm";
@@ -64,6 +64,8 @@ const HomeVisitForm: React.FC = () => {
         name: "pacients",
     });
 
+    const [loading, setLoading] = useState(true); // Loading state
+
     const onSubmit = (data: FormData) => {
         console.log("Submit data:", data);
     };
@@ -93,29 +95,55 @@ const HomeVisitForm: React.FC = () => {
         remove(index);
     };
 
+    // Simulate a loader
+    React.useEffect(() => {
+        const timeout = setTimeout(() => {
+            setLoading(false);
+        }, 1000); // Simulate 1-second load time
+
+        return () => clearTimeout(timeout);
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <div
+                    className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"
+                    role="status"
+                >
+                    <span className="sr-only">Loading...</span>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <FormProvider {...methods}>
             <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="border border-gray-300 rounded-md p-10 gap-6 flex flex-col bg-white w-full h-full relative"
             >
-                <VisitForm />
+                <Suspense fallback={<p>Loading VisitForm...</p>}>
+                    <VisitForm />
+                </Suspense>
 
-                {/* Dynamiczne renderowanie PacientForm */}
-                {fields.map((field, index) => (
-                    <div key={field.id} className="relative ">
-                        <PacientForm index={index} />
-                        {fields.length > 1 && index > 0 && (
-                            <button
-                                type="button"
-                                onClick={() => handleRemovePacient(index)}
-                                className="absolute top-2 right-2"
-                            >
-                                <X color="red" />
-                            </button>
-                        )}
-                    </div>
-                ))}
+                {/* Dynamic rendering of PacientForm */}
+                <Suspense fallback={<p>Loading PacientForms...</p>}>
+                    {fields.map((field, index) => (
+                        <div key={field.id} className="relative ">
+                            <PacientForm index={index} />
+                            {fields.length > 1 && index > 0 && (
+                                <button
+                                    type="button"
+                                    onClick={() => handleRemovePacient(index)}
+                                    className="absolute top-2 right-2"
+                                >
+                                    <X color="red" />
+                                </button>
+                            )}
+                        </div>
+                    ))}
+                </Suspense>
 
                 <button
                     type="button"

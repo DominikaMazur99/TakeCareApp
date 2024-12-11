@@ -52,7 +52,7 @@ const RadioButtonsInOne: React.FC<RadioGroupProps> = ({
                                         : index === options.length - 1
                                         ? "rounded-r-md" // Right rounded corner for the last button
                                         : "", // No rounded corners for middle buttons
-                                    field.value === option.value
+                                    field.value !== option.value
                                         ? "bg-white py-1.5 px-3 rounded-3px text-[#09162A]"
                                         : "bg-[#E5F0FF] text-[#242628]"
                                 )}
