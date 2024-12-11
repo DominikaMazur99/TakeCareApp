@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import InputComponent from "../fields/InputComponent";
 import RadioButtonsComponent from "../fields/RadioButtonsComponent";
@@ -10,12 +12,14 @@ import SelectComponent from "../fields/SelectComponent";
 import DatePickerComponent from "../fields/DatePickerComponent";
 import { format } from "date-fns";
 import { peselToDate, toRoman } from "../../helpers/helpers";
+import { useTranslation } from "react-i18next";
 
 interface PacientFormProps {
     index: number;
 }
 
 const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
+    const { t } = useTranslation();
     const { options } = useSidebar();
     const { watch, setValue, trigger } = useFormContext();
     const documentType = watch(`pacients.${index}.document`);
@@ -60,15 +64,17 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
     return (
         <div id={`patient-section-${index}`} className="flex flex-col gap-6">
             <h3 className="text-[24px] text-[#112950] font-[300]">
-                {index === 0 ? `Pacjent` : `Pacjent ${toRoman(index + 1)}`}
+                {index === 0
+                    ? t("patient.patient")
+                    : `${t("patient.patient")} ${toRoman(index + 1)}`}
             </h3>
             <div id={`pacients-${index}-age`}>
                 <RadioButtonsComponent
                     name={`pacients.${index}.age`}
-                    label="Wiek pacjenta"
+                    label={t("patient.age")}
                     options={[
-                        { label: "Dorosły", value: "adult" },
-                        { label: "Dziecko", value: "child" },
+                        { label: t("patient.adult"), value: "adult" },
+                        { label: t("patient.child"), value: "child" },
                     ]}
                 />
             </div>
@@ -77,21 +83,21 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                     className="block text-base text-textLabel font-hight mb-2"
                     id={`pacients-${index}-pacient`}
                 >
-                    Dane Pacjenta
+                    {t("patient.details")}
                 </label>
                 <div className="flex items-center gap-4 w-full">
                     <div className="w-1/2">
                         <InputComponent
                             id={`pacients-${index}-name`}
                             name={`pacients.${index}.name`}
-                            placeholder="Imię"
+                            placeholder={t("patient.name")}
                         />
                     </div>
                     <div className="w-1/2">
                         <InputComponent
                             id={`pacients-${index}-surname`}
                             name={`pacients.${index}.surname`}
-                            placeholder="Nazwisko"
+                            placeholder={t("patient.surname")}
                         />
                     </div>
                 </div>
@@ -100,23 +106,23 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                 <MultiSelectComponent
                     id={`pacients-${index}-symptoms`}
                     name={`pacients.${index}.symptoms`}
-                    label="Objawy"
+                    label={t("patient.symptoms.label")}
                     options={options.symptoms || []}
                 />
             )}
             <RadioButtonsInOne
                 name={`pacients.${index}.document`}
-                label="Dokument"
+                label={t("document.type")}
                 options={[
-                    { label: "PESEL", value: "pesel" },
-                    { label: "Paszport", value: "passport" },
+                    { label: t("document.pesel"), value: "pesel" },
+                    { label: t("document.passport"), value: "passport" },
                 ]}
             />
             {documentType === "passport" ? (
                 <InputComponent
                     id={`pacients-${index}-passport`}
                     name={`pacients.${index}.passport`}
-                    placeholder="Wpisz numer paszportu"
+                    placeholder={t("patient.passport.placeholder")}
                 />
             ) : (
                 <div className="flex items-center gap-4 w-full">
@@ -124,13 +130,13 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                         <InputComponent
                             id={`pacients-${index}-pesel`}
                             name={`pacients.${index}.pesel`}
-                            placeholder="Wpisz numer PESEL"
+                            placeholder={t("patient.pesel.placeholder")}
                         />
                     </div>
                     <div className="w-1/2">
                         <DatePickerComponent
                             name={`pacients.${index}.birthDate`}
-                            placeholder="Data urodzenia"
+                            placeholder={t("patient.birthdate.placeholder")}
                         />
                     </div>
                 </div>
@@ -142,13 +148,13 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                             className="block text-base text-textLabel font-hight mb-2"
                             id={`pacients-${index}-adress`}
                         >
-                            Dane adresowe
+                            {t("visit.address.label")}
                         </label>
                         {isClient && (
                             <SelectComponent
                                 id={`pacients-${index}-country`}
                                 name={`pacients.${index}.country`}
-                                placeholder="Kraj"
+                                placeholder={t("patient.country")}
                                 options={options.countries || []}
                             />
                         )}
@@ -157,36 +163,36 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                                 <InputComponent
                                     id={`pacients-${index}-street`}
                                     name={`pacients.${index}.street`}
-                                    placeholder="Ulica"
+                                    placeholder={t(
+                                        "patient.street.placeholder"
+                                    )}
                                 />
                             </div>
                             <div className="w-1/2">
-                                {" "}
                                 <InputComponent
                                     id={`pacients-${index}-local`}
                                     name={`pacients.${index}.local`}
-                                    placeholder="Numer lokalu"
+                                    placeholder={t("patient.local.placeholder")}
                                 />
                             </div>
                         </div>
                     </div>
                     <CheckboxComponent
                         name={`pacients.${index}.difadress`}
-                        label="Wizyta ma się odbyć na inny adres"
+                        label={t("visit.differentAddress.label")}
                     />
                 </>
             )}
-
             {secondAddress && index === 0 && (
                 <div>
                     <label className="block text-base text-textLabel font-hight mb-2">
-                        Dane adresowe (2)
+                        {t("visit.address2.label")}
                     </label>
                     {isClient && (
                         <SelectComponent
                             id={`pacients-${index}-country-2`}
                             name={`pacients.${index}.secondCountry`}
-                            placeholder="Kraj"
+                            placeholder={t("patient.country")}
                             options={options.countries || []}
                         />
                     )}
@@ -194,12 +200,12 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                         <InputComponent
                             id={`pacients-${index}-street-2`}
                             name={`pacients.${index}.secondStreet`}
-                            placeholder="Ulica"
+                            placeholder={t("patient.street.placeholder")}
                         />
                         <InputComponent
                             id={`pacients-${index}-local-2`}
                             name={`pacients.${index}.secondLocal`}
-                            placeholder="Numer lokalu"
+                            placeholder={t("patient.local.placeholder")}
                         />
                     </div>
                 </div>

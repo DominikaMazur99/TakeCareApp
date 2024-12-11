@@ -23,6 +23,8 @@ interface SidebarContextProps {
     setSelectedSection: (section: string) => void;
     options: Data;
     loading: boolean;
+    selectedLanguage: string;
+    setLanguage: (lang: string) => void;
 }
 
 const SidebarContext = createContext<SidebarContextProps>({
@@ -38,6 +40,8 @@ const SidebarContext = createContext<SidebarContextProps>({
         visits: [],
     },
     loading: true,
+    selectedLanguage: "pl",
+    setLanguage: () => {},
 });
 
 export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -56,6 +60,11 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
     });
 
     const [loading, setLoading] = useState(true);
+    const [selectedLanguage, setSelectedLanguage] = useState("PL"); // Domyślny język
+
+    const setLanguage = (lang: string) => {
+        setSelectedLanguage(lang);
+    };
 
     useEffect(() => {
         if (pathname) {
@@ -65,13 +74,18 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
     }, [pathname]);
 
     useEffect(() => {
+        let isMounted = true; // Ensure cleanup to avoid state updates on unmounted components
+
         const fetchOptions = async () => {
             try {
-                setLoading(true);
-                const response = await fetch("/api/homeform-select-options");
+                if (isMounted) setLoading(true);
+
+                const response = await fetch(
+                    `/api/homeform-select-options?lng=${selectedLanguage.toLowerCase()}`
+                );
                 const data = await response.json();
 
-                if (data) {
+                if (data && isMounted) {
                     const transformedData = {
                         symptoms: data.symptoms.map((item: any) => ({
                             label: item.name,
@@ -109,16 +123,27 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
             } catch (error) {
                 console.error("Error fetching options:", error);
             } finally {
-                setLoading(false);
+                if (isMounted) setLoading(false);
             }
         };
 
         fetchOptions();
-    }, []);
+
+        return () => {
+            isMounted = false; // Cleanup function to prevent state updates if unmounted
+        };
+    }, [selectedLanguage]); // Re-run when the language changes
 
     return (
         <SidebarContext.Provider
-            value={{ selectedSection, setSelectedSection, options, loading }}
+            value={{
+                selectedSection,
+                setSelectedSection,
+                options,
+                loading,
+                selectedLanguage,
+                setLanguage,
+            }}
         >
             {children}
         </SidebarContext.Provider>

@@ -8,9 +8,10 @@ import {
     BreadcrumbLink,
     BreadcrumbList,
 } from "@/components/ui/breadcrumb";
-import { menuItems, logoutItems, settingsItems } from "../helpers/data";
+import { useMenuItems } from "../helpers/data";
 
 const Breadcrumbs: React.FC = () => {
+    const { menuItems, settingsItems, logoutItems } = useMenuItems();
     const pathname = usePathname();
 
     const breadcrumbs =

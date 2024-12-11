@@ -4,9 +4,10 @@ import React from "react";
 import Footer from "../../icons/sidebar/FooterIcon.svg";
 import ListComponent from "../ui/ListComponent";
 import UserCard from "../ui/UserCard";
-import { logoutItems, menuItems, settingsItems } from "../helpers/data";
+import { useMenuItems } from "../helpers/data";
 
 const SideBarComponent: React.FC = () => {
+    const { menuItems, settingsItems, logoutItems } = useMenuItems();
     return (
         <div className="flex flex-col h-[calc(100vh-150px)]">
             <div className="flex-1 flex flex-col justify-between bg-white shadow-md p-6 rounded-md overflow-auto">

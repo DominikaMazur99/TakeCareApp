@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Select from "react-select";
 
 interface MultiSelectProps {
@@ -15,11 +16,12 @@ const MultiSelectComponent: React.FC<MultiSelectProps> = ({
     id,
     name,
     label,
-    placeholder = "Wybierz z listy",
+    placeholder = "list.placeholder",
     options,
     className = "",
     onChange,
 }) => {
+    const { t } = useTranslation();
     const handleChange = (selectedOptions: any) => {
         if (onChange) {
             onChange(selectedOptions || []);
@@ -86,7 +88,7 @@ const MultiSelectComponent: React.FC<MultiSelectProps> = ({
                 inputId={`${id}-input`}
                 isMulti
                 options={options || []}
-                placeholder={placeholder}
+                placeholder={t(placeholder)}
                 onChange={handleChange}
                 styles={customStyles} // Apply custom styles
             />

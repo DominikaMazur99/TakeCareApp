@@ -1,12 +1,15 @@
 "use client";
 
 import HomeVisitForm from "@/app/customComponents/forms/HomeVisitForm";
-import { patientFields, baseFields } from "@/app/customComponents/helpers/data";
+import { useFields } from "@/app/customComponents/helpers/data";
 import { toRoman } from "@/app/customComponents/helpers/helpers";
 import AccordionComponent from "@/app/customComponents/ui/AccordionComponent";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const HomePage: React.FC = () => {
+    const { t } = useTranslation();
+    const { baseFields, patientFields } = useFields();
     const [patients, setPatients] = useState([
         { id: 0, fields: patientFields },
     ]);
@@ -26,18 +29,18 @@ const HomePage: React.FC = () => {
 
     const accordionData = [
         ...baseFields.map((section) => ({
-            title: section.sectionTitle,
+            title: t(section.sectionTitle),
             subItems: section.fields.map((field) => ({
-                title: field.fieldLabel,
+                title: t(field.fieldLabel),
                 targetId: field.fieldId,
             })),
         })),
         ...patients.map((patient, index) => ({
-            title: `Pacjent ${toRoman(index + 1)}`,
+            title: `${t("patient.patient")} ${toRoman(index + 1)}`,
             subItems: patient.fields
                 .filter((field) => !(index > 0 && field.fieldId === "adress")) // Usuwamy "Dane adresowe" dla index > 0
                 .map((field) => ({
-                    title: field.fieldLabel,
+                    title: t(field.fieldLabel),
                     targetId: `pacients-${index}-${field.fieldId}`,
                 })),
         })),
@@ -49,7 +52,7 @@ const HomePage: React.FC = () => {
                 <div>
                     <div className="flex flex-col gap-2">
                         <h1 className="text-[#112950] text-[40px] font-[300]">
-                            Umawianie wizyty
+                            {t("form.header.book")}
                         </h1>
                         <HomeVisitForm updateAccordion={addNewPatient} />
                     </div>

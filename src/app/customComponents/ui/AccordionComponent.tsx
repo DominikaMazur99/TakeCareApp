@@ -5,6 +5,7 @@ import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { ChevronDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { t } from "i18next";
 
 interface AccordionComponentProps {
     data: Array<{
@@ -56,7 +57,7 @@ const AccordionComponent: React.FC<AccordionComponentProps> = ({
                             "data-[state=open]:text-blue-600 data-[state=open]:[&>svg]:text-blue-600"
                         )}
                     >
-                        Przejdź do
+                        {t("go.to")}
                         <ChevronDown className="h-4 w-4 shrink-0 text-sm text-[#242628] font-[500] transition-transform duration-200" />
                     </AccordionPrimitive.Trigger>
                 </AccordionPrimitive.Header>

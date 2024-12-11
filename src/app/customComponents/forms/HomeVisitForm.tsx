@@ -4,10 +4,11 @@ import React, { Suspense, useEffect } from "react";
 import { useForm, FormProvider, useFieldArray } from "react-hook-form";
 import VisitForm from "./formParts/VisitForm";
 import PacientForm from "./formParts/PacientForm";
-import { X } from "lucide-react";
-import { formSchema } from "../helpers/validators";
+import { ChevronRight, X } from "lucide-react";
+import { createFormSchema } from "../helpers/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSidebar } from "@/hooks/SidebarContext";
+import { useTranslation } from "react-i18next";
 
 interface Pacient {
     id: number;
@@ -40,7 +41,9 @@ interface HomeVisitFormProps {
 }
 
 const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
+    const { t } = useTranslation();
     const { selectedSection } = useSidebar();
+    const formSchema = createFormSchema(t);
 
     const methods = useForm<FormData>({
         resolver: zodResolver(formSchema),
@@ -123,7 +126,6 @@ const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
                 <Suspense fallback={<p>Loading VisitForm...</p>}>
                     <VisitForm />
                 </Suspense>
-
                 <Suspense fallback={<p>Loading PacientForms...</p>}>
                     {fields.map((field, index) => (
                         <div
@@ -144,20 +146,20 @@ const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
                         </div>
                     ))}
                 </Suspense>
-
                 <button
                     type="button"
                     onClick={handleAddPacient}
                     className="text-blue-500 bg-white border-blue-500 border-[1px] px-4 py-2 rounded-md"
                 >
-                    Dodaj pacjenta
+                    {t("btn.patient")}
                 </button>
 
                 <button
                     type="submit"
-                    className="bg-blue-500 border-blue-500 border-[1px] text-white px-4 py-2 rounded-md"
+                    className="flex items-center justify-center bg-blue-500 border-blue-500 border-[1px] text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-all"
                 >
-                    Dalej &gt;
+                    <span className="mr-2">{t("btn.next")}</span>
+                    <ChevronRight className="w-5 h-5" />
                 </button>
             </form>
         </FormProvider>

@@ -1,7 +1,9 @@
 "use client";
 
+import { useSidebar } from "@/hooks/SidebarContext";
 import { ChevronDown, Earth } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface LanguageOption {
     label: string;
@@ -9,29 +11,24 @@ interface LanguageOption {
 }
 
 const LanguageSelect: React.FC = () => {
-    const [selectedLanguage, setSelectedLanguage] = useState<LanguageOption>({
-        label: "PL",
-        value: "pl",
-    });
-    const [isOpen, setIsOpen] = useState(false); // Stan do kontrolowania widoczności menu
-    const dropdownRef = useRef<HTMLDivElement>(null); // Referencja do całego komponentu
+    const { selectedLanguage, setLanguage } = useSidebar();
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const { i18n, t } = useTranslation();
 
     const options: LanguageOption[] = [
-        { label: "PL", value: "pl" },
-        { label: "EN", value: "en" },
-        { label: "DE", value: "de" },
+        { label: t("language.pl"), value: "PL" },
+        { label: t("language.en"), value: "EN" },
     ];
 
     const handleLanguageChange = (value: string) => {
-        const selected = options.find((option) => option.value === value);
-        if (selected) {
-            setSelectedLanguage(selected);
-            setIsOpen(false); // Zamknij menu po wyborze
-        }
+        setLanguage(value);
+        i18n.changeLanguage(value.toLowerCase());
+        setIsOpen(false);
     };
 
     const toggleDropdown = () => {
-        setIsOpen((prev) => !prev); // Przełącz stan otwarcia/zamknięcia menu
+        setIsOpen((prev) => !prev);
     };
 
     const handleClickOutside = (event: MouseEvent) => {
@@ -39,7 +36,7 @@ const LanguageSelect: React.FC = () => {
             dropdownRef.current &&
             !dropdownRef.current.contains(event.target as Node)
         ) {
-            setIsOpen(false); // Zamknij menu, jeśli kliknięto poza komponentem
+            setIsOpen(false);
         }
     };
 
@@ -59,7 +56,7 @@ const LanguageSelect: React.FC = () => {
             >
                 <div className="flex items-center gap-2">
                     <Earth className="w-4 h-4" />
-                    <span>{selectedLanguage.label}</span>
+                    <span>{selectedLanguage}</span>
                 </div>
                 <ChevronDown
                     className={`w-4 h-4 transition-transform ${
@@ -73,7 +70,7 @@ const LanguageSelect: React.FC = () => {
                         <button
                             key={option.value}
                             className={`block w-full text-left px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-600 ${
-                                option.value === selectedLanguage.value
+                                option.value === selectedLanguage
                                     ? "bg-blue-100 text-blue-600"
                                     : "text-gray-800"
                             }`}

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import InputComponent from "../fields/InputComponent";
@@ -6,8 +8,10 @@ import TextareaComponent from "../fields/TextareaComponent";
 import DatePickerComponent from "../fields/DatePickerComponent";
 import CheckboxComponent from "../fields/CheckboxComponent";
 import { useSidebar } from "@/hooks/SidebarContext";
+import { useTranslation } from "react-i18next";
 
 const VisitForm: React.FC = () => {
+    const { t } = useTranslation();
     const { options } = useSidebar();
     const [isClient, setIsClient] = useState(false);
     const { watch } = useFormContext();
@@ -52,13 +56,15 @@ const VisitForm: React.FC = () => {
 
     return (
         <div id="visit-section" className="flex flex-col gap-6">
-            <h3 className="text-[24px] text-[#112950] font-[300]">Wizyta</h3>
+            <h3 className="text-[24px] text-[#112950] font-[300]">
+                {t("visit.section")}
+            </h3>
             <InputComponent
                 id="number-of-issue"
                 name="numberOfIssue"
-                label="Numer zgłoszenia"
-                placeholder="Wpisz numer zgłoszenia"
-                rules={{ required: "Pole wymagane." }}
+                label={t("visit.number")}
+                placeholder={t("visit.number.placeholder")}
+                rules={{ required: t("field.required") }}
             />
             {isClient && (
                 <>
@@ -66,17 +72,17 @@ const VisitForm: React.FC = () => {
                         key="visit-type"
                         id="visit-type"
                         name="visitType"
-                        label="Rodzaj wizyty"
-                        rules={{ required: "Pole wymagane." }}
+                        label={t("visit.type")}
+                        rules={{ required: t("field.required") }}
                         options={options.visits || []}
                     />
                     <SelectComponent
                         key="specialization"
                         id="specialization"
                         name="Specialization"
-                        label="Specjalizacja"
-                        placeholder="Wybierz z listy"
-                        rules={{ required: "Pole wymagane." }}
+                        label={t("visit.specialization")}
+                        placeholder={t("visit.specialization.placeholder")}
+                        rules={{ required: t("field.required") }}
                         options={options.specializations || []}
                     />
                 </>
@@ -84,18 +90,18 @@ const VisitForm: React.FC = () => {
             <div id={`visit-date`}>
                 <DatePickerComponent
                     name="visitDate"
-                    label="Data wizyty"
-                    placeholder="Data wizyty"
+                    label={t("visit.date")}
+                    placeholder={t("visit.date.placeholder")}
                 />
             </div>
             <CheckboxComponent
                 name="hoursrange"
-                label="Wybierz konkretny przedział godzinowy"
+                label={t("visit.hoursRange.label")}
             />
             {showHoursRange && (
                 <div>
                     <label className="text-base text-textLabel font-hight">
-                        Godzina
+                        {t("visit.hours")}
                     </label>
                     <div className="flex items-center gap-4 w-full">
                         {isClient && (
@@ -105,7 +111,7 @@ const VisitForm: React.FC = () => {
                                         key="from"
                                         id="from"
                                         name="From"
-                                        placeholder="Od"
+                                        placeholder={t("visit.hours.from")}
                                         options={generateFromOptions()}
                                     />
                                 </div>
@@ -114,7 +120,7 @@ const VisitForm: React.FC = () => {
                                         key="to"
                                         id="to"
                                         name="To"
-                                        placeholder="Do"
+                                        placeholder={t("visit.hours.to")}
                                         options={generateToOptions()}
                                     />
                                 </div>
@@ -128,24 +134,24 @@ const VisitForm: React.FC = () => {
                     key="topic"
                     id="topic"
                     name="Topic"
-                    label="Temat"
-                    placeholder="Wybierz z listy"
+                    label={t("visit.topic")}
+                    placeholder={t("visit.topic.placeholder")}
                     options={options.topics || []}
                 />
             )}
             <TextareaComponent
                 id="additional"
                 name="Additional Information"
-                label="Dodatkowe informacje (opcjonalnie)"
-                placeholder="Opisz problem"
+                label={t("visit.additionalInfo")}
+                placeholder={t("visit.additionalInfo.placeholder")}
             />
             {isClient && (
                 <SelectComponent
                     key="language"
                     id="language"
                     name="Language"
-                    label="Język wizyty"
-                    placeholder="Wybierz z listy"
+                    label={t("visit.language")}
+                    placeholder={t("list.placeholder")}
                     options={options.languages || []}
                 />
             )}

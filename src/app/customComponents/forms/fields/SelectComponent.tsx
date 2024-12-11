@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { Controller, useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 interface SelectProps {
     id: string;
@@ -17,10 +18,11 @@ const SelectComponent: React.FC<SelectProps> = ({
     id,
     name,
     label,
-    placeholder = "Wybierz opcję",
+    placeholder = "option.placeholder",
     options,
     rules,
 }) => {
+    const { t } = useTranslation();
     const { control } = useFormContext();
 
     const customStyles = {
@@ -80,7 +82,7 @@ const SelectComponent: React.FC<SelectProps> = ({
                             {...field}
                             inputId={`${id}-input`}
                             options={options || []}
-                            placeholder={placeholder}
+                            placeholder={t(placeholder)}
                             value={
                                 options?.find(
                                     (option: any) =>
