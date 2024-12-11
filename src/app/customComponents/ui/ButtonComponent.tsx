@@ -24,7 +24,11 @@ const ButtonComponent: React.FC<ButtonComponentProps> = ({
     icon,
 }) => {
     return (
-        <Button variant={variant} icon={icon} className="break-words">
+        <Button
+            variant={variant}
+            icon={icon}
+            className="break-words min-w-[100px] max-w-full text-center"
+        >
             {name}
         </Button>
     );
