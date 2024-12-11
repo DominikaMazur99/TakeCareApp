@@ -7,8 +7,6 @@ import {
     BreadcrumbItem,
     BreadcrumbLink,
     BreadcrumbList,
-    BreadcrumbSeparator,
-    BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 import { menuItems, logoutItems, settingsItems } from "../helpers/data";
 
@@ -43,7 +41,6 @@ const Breadcrumbs: React.FC = () => {
                         <BreadcrumbLink href={selectedOption.path}>
                             {selectedOption.name}
                         </BreadcrumbLink>
-                        {/* <BreadcrumbSeparator /> */}
                     </BreadcrumbItem>
                 )}
             </BreadcrumbList>

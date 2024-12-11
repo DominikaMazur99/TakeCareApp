@@ -9,7 +9,7 @@ import MultiSelectComponent from "../fields/MultiselectComponent";
 import SelectComponent from "../fields/SelectComponent";
 import DatePickerComponent from "../fields/DatePickerComponent";
 import { format } from "date-fns";
-import { peselToDate } from "../../helpers/helpers";
+import { peselToDate, toRoman } from "../../helpers/helpers";
 
 interface PacientFormProps {
     index: number;
@@ -25,7 +25,7 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true); // Flag after client load
+        setIsClient(true);
     }, []);
 
     useEffect(() => {
@@ -36,9 +36,9 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                     `pacients.${index}.birthDate`,
                     format(derivedBirthDate, "yyyy-MM-dd")
                 );
-                trigger(`pacients.${index}.birthDate`); // Trigger validation on sync
+                trigger(`pacients.${index}.birthDate`);
             } catch {
-                setValue(`pacients.${index}.birthDate`, ""); // Clear if invalid
+                setValue(`pacients.${index}.birthDate`, "");
             }
         }
     }, [peselValue, setValue, index, trigger]);
@@ -60,7 +60,7 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
     return (
         <div id={`patient-section-${index}`} className="flex flex-col gap-6">
             <h3 className="text-[24px] text-[#112950] font-[300]">
-                {index === 0 ? `Pacjent` : `Pacjent ${index + 1}`}
+                {index === 0 ? `Pacjent` : `Pacjent ${toRoman(index + 1)}`}
             </h3>
             <div id={`pacients-${index}-age`}>
                 <RadioButtonsComponent

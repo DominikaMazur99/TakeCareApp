@@ -24,3 +24,34 @@ export const peselToDate = (pesel: string) => {
 
     return new Date(fullYear, actualMonth - 1, day); // Month is 0-indexed
 };
+
+export const toRoman = (num: string | number): string => {
+    const romanMap: [string, number][] = [
+        ["M", 1000],
+        ["CM", 900],
+        ["D", 500],
+        ["CD", 400],
+        ["C", 100],
+        ["XC", 90],
+        ["L", 50],
+        ["XL", 40],
+        ["X", 10],
+        ["IX", 9],
+        ["V", 5],
+        ["IV", 4],
+        ["I", 1],
+    ];
+
+    // Upewnij się, że `num` jest liczbą
+    let number = typeof num === "string" ? parseInt(num, 10) : num;
+
+    let roman = "";
+    for (const [letter, value] of romanMap) {
+        while (number >= value) {
+            // TypeScript teraz jest pewien, że `number` jest liczbą
+            roman += letter;
+            number -= value;
+        }
+    }
+    return roman;
+};

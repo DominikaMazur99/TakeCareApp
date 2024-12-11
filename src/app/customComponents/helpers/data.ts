@@ -32,83 +32,25 @@ export const logoutItems: { name: string; icon: IconName; path: string }[] = [
     { name: "Wyloguj się", icon: "LogoutIcon", path: "/section/logout" },
 ];
 
-export const fieldsToAccordion = [
+export const baseFields = [
     {
         sectionId: "visit-section",
         sectionTitle: "Wizyta",
         fields: [
-            {
-                fieldId: "number-of-issue",
-                fieldLabel: "Numer zgłoszenia",
-                fieldType: "text",
-            },
-            {
-                fieldId: "visit-type",
-                fieldLabel: "Rodzaj wizyty",
-                fieldType: "select",
-            },
-            {
-                fieldId: "specialization",
-                fieldLabel: "Specjalizacja",
-                fieldType: "select",
-            },
-            {
-                fieldId: "visit-date",
-                fieldLabel: "Data wizyty",
-                fieldType: "date",
-            },
+            { fieldId: "number-of-issue", fieldLabel: "Numer zgłoszenia" },
+            { fieldId: "visit-type", fieldLabel: "Rodzaj wizyty" },
+            { fieldId: "specialization", fieldLabel: "Specjalizacja" },
+            { fieldId: "visit-date", fieldLabel: "Data wizyty" },
+            { fieldId: "topic", fieldLabel: "Temat" },
+            { fieldId: "additional", fieldLabel: "Dodatkowe informacje" },
+        ],
+    },
+];
 
-            {
-                fieldId: "topic",
-                fieldLabel: "Temat",
-                fieldType: "select",
-            },
-            {
-                fieldId: "additional",
-                fieldLabel: "Dodatkowe informacje",
-                fieldType: "textarea",
-            },
-            {
-                fieldId: "code",
-                fieldLabel: "Kod rabatowy",
-                fieldType: "checkbox",
-            },
-        ],
-    },
-    {
-        sectionId: "patient-section",
-        sectionTitle: "Pacjent",
-        fields: [
-            {
-                fieldId: "country",
-                fieldLabel: "Kraj",
-                fieldType: "select",
-            },
-            {
-                fieldId: "age",
-                fieldLabel: "Wiek pacjenta",
-                fieldType: "radio",
-            },
-            {
-                fieldId: "pacient-date",
-                fieldLabel: "Dane pacjenta",
-                fieldType: "text",
-            },
-            {
-                fieldId: "symptoms",
-                fieldLabel: "Objawy",
-                fieldType: "select",
-            },
-            {
-                fieldId: "document",
-                fieldLabel: "Dokument",
-                fieldType: "radio",
-            },
-            {
-                fieldId: "adress-date",
-                fieldLabel: "Dane adresowe",
-                fieldType: "text",
-            },
-        ],
-    },
+export const patientFields = [
+    { fieldId: "country", fieldLabel: "Kraj" },
+    { fieldId: "age", fieldLabel: "Wiek pacjenta" },
+    { fieldId: "pacient", fieldLabel: "Dane pacjenta" },
+    { fieldId: "symptoms", fieldLabel: "Objawy" },
+    { fieldId: "adress", fieldLabel: "Dane adresowe" },
 ];

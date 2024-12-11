@@ -33,7 +33,7 @@ const AccordionComponent: React.FC<AccordionComponentProps> = ({
                 } else {
                     console.warn("Element not found for ID:", targetId);
                 }
-            }, 100); // Opóźnienie na wyrenderowanie elementu
+            }, 100);
         }
     };
 

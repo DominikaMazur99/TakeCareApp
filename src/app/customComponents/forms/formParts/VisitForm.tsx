@@ -10,16 +10,15 @@ import { useSidebar } from "@/hooks/SidebarContext";
 const VisitForm: React.FC = () => {
     const { options } = useSidebar();
     const [isClient, setIsClient] = useState(false);
-    const { watch, setValue } = useFormContext(); // Additional hooks for validation
+    const { watch } = useFormContext();
     const showHoursRange = watch("hoursrange");
     const visitDate = watch("visitDate");
     const fromTime = watch("From");
 
     useEffect(() => {
-        setIsClient(true); // Flag after client load
+        setIsClient(true);
     }, []);
 
-    // Dynamic hours for "From" and "To"
     const generateFromOptions = () => {
         const currentDate = new Date();
         if (visitDate) {
@@ -49,7 +48,7 @@ const VisitForm: React.FC = () => {
         }));
     };
 
-    if (!isClient) return null; // Prevent server rendering
+    if (!isClient) return null;
 
     return (
         <div id="visit-section" className="flex flex-col gap-6">

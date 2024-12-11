@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, Suspense } from "react";
+import React, { Suspense } from "react";
 import { useForm, FormProvider, useFieldArray } from "react-hook-form";
 import VisitForm from "./formParts/VisitForm";
 import PacientForm from "./formParts/PacientForm";
@@ -31,11 +31,11 @@ interface FormData {
     visitType: string;
     specialization: string;
     visitDate: string;
-    pacients: Pacient[]; // Tablica pacjentów
+    pacients: Pacient[];
 }
 
 interface HomeVisitFormProps {
-    updateAccordion: (index: number) => void; // Funkcja aktualizująca Accordion
+    updateAccordion: (index: number) => void;
 }
 
 const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
@@ -94,7 +94,6 @@ const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
                 difadress: false,
             });
 
-            // Aktualizacja Accordion
             updateAccordion(newIndex);
         } else {
             alert("Możesz dodać maksymalnie 6 pacjentów.");
@@ -111,7 +110,6 @@ const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
                     <VisitForm />
                 </Suspense>
 
-                {/* Dynamic rendering of PacientForm */}
                 <Suspense fallback={<p>Loading PacientForms...</p>}>
                     {fields.map((field, index) => (
                         <div
