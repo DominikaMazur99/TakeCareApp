@@ -65,7 +65,7 @@ const VisitForm: React.FC = () => {
                     <SelectComponent
                         key="visit-type"
                         id="visit-type"
-                        name="Visit Type"
+                        name="visitType"
                         label="Rodzaj wizyty"
                         rules={{ required: "Pole wymagane." }}
                         options={options.visits || []}

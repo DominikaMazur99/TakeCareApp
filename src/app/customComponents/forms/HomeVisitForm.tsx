@@ -1,12 +1,13 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { useForm, FormProvider, useFieldArray } from "react-hook-form";
 import VisitForm from "./formParts/VisitForm";
 import PacientForm from "./formParts/PacientForm";
 import { X } from "lucide-react";
 import { formSchema } from "../helpers/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSidebar } from "@/hooks/SidebarContext";
 
 interface Pacient {
     id: number;
@@ -39,12 +40,14 @@ interface HomeVisitFormProps {
 }
 
 const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
+    const { selectedSection } = useSidebar();
+
     const methods = useForm<FormData>({
         resolver: zodResolver(formSchema),
         mode: "onBlur",
         defaultValues: {
             numberOfIssue: "",
-            visitType: "Wizyta domowa",
+            visitType: "",
             specialization: "",
             visitDate: "",
             pacients: [
@@ -66,7 +69,7 @@ const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
         },
     });
 
-    const { control, handleSubmit } = methods;
+    const { control, handleSubmit, setValue } = methods;
     const { fields, append, remove } = useFieldArray({
         control,
         name: "pacients",
@@ -99,6 +102,17 @@ const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
             alert("Możesz dodać maksymalnie 6 pacjentów.");
         }
     };
+
+    useEffect(() => {
+        const visitType =
+            selectedSection === "home"
+                ? "Wizyta domowa"
+                : selectedSection === "online"
+                ? "Wizyta online"
+                : "Wizyta stacjonarna";
+
+        setValue("visitType", visitType);
+    }, [selectedSection, setValue]);
 
     return (
         <FormProvider {...methods}>

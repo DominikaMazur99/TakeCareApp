@@ -14,7 +14,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 { id: "2", name: "Anglia" },
                 { id: "3", name: "Niemcy" },
             ],
-
             hours: [
                 { id: "1", name: "12:00" },
                 { id: "2", name: "13:00" },
