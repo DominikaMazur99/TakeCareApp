@@ -46,10 +46,7 @@ const AccordionComponent: React.FC<AccordionComponentProps> = ({
                 className
             )}
         >
-            <AccordionPrimitive.Item
-                value="main"
-                className="border-b last:border-none after:content-[''] after:block after:h-px after:bg-gray-300 after:mt-1"
-            >
+            <AccordionPrimitive.Item value="main">
                 <AccordionPrimitive.Header className="flex">
                     <AccordionPrimitive.Trigger
                         className={cn(
