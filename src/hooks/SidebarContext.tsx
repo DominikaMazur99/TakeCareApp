@@ -27,6 +27,8 @@ interface SidebarContextProps {
     setLanguage: (lang: string) => void;
     bookVisit: boolean;
     handleBookVisit: (value: boolean) => void;
+    problemRegister: boolean;
+    handleProblemRegister: (value: boolean) => void;
 }
 
 const SidebarContext = createContext<SidebarContextProps>({
@@ -46,6 +48,8 @@ const SidebarContext = createContext<SidebarContextProps>({
     setLanguage: () => {},
     bookVisit: false,
     handleBookVisit: () => {},
+    problemRegister: false,
+    handleProblemRegister: () => {},
 });
 
 export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -66,16 +70,18 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
     const [loading, setLoading] = useState(true);
     const [selectedLanguage, setSelectedLanguage] = useState("PL");
     const [bookVisit, setBookVisit] = useState(false);
+    const [problemRegister, setProblemRegister] = useState(false);
 
     const setLanguage = (lang: string) => {
         setSelectedLanguage(lang);
     };
 
     const handleBookVisit = (value: boolean) => {
-        console.log("jestem", value);
         setBookVisit(value);
     };
-    console.log("book", bookVisit);
+    const handleProblemRegister = (value: boolean) => {
+        setProblemRegister(value);
+    };
 
     useEffect(() => {
         if (pathname) {
@@ -85,7 +91,7 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
     }, [pathname]);
 
     useEffect(() => {
-        let isMounted = true; // Ensure cleanup to avoid state updates on unmounted components
+        let isMounted = true;
 
         const fetchOptions = async () => {
             try {
@@ -141,9 +147,9 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
         fetchOptions();
 
         return () => {
-            isMounted = false; // Cleanup function to prevent state updates if unmounted
+            isMounted = false;
         };
-    }, [selectedLanguage]); // Re-run when the language changes
+    }, [selectedLanguage]);
 
     return (
         <SidebarContext.Provider
@@ -156,6 +162,8 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
                 setLanguage,
                 bookVisit,
                 handleBookVisit,
+                problemRegister,
+                handleProblemRegister,
             }}
         >
             {children}
