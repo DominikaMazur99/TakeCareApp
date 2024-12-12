@@ -24,7 +24,7 @@ This app is in progress...I would like to develop it!
 
 To get started with the application, follow these steps:
 
-1. Clone the repository:
+1. How to open it:
     ```bash
     git clone <repository-url>
     npm install
