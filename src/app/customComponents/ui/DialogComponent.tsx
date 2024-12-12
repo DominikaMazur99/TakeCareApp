@@ -7,27 +7,20 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { useRouter } from "next/navigation";
 
 interface DialogProps {
     open: boolean;
     onClose: () => void;
+    title?: string;
+    content?: React.ReactNode;
 }
 
-const DialogComponent: React.FC<DialogProps> = ({ open, onClose }) => {
-    const router = useRouter();
-
-    const navigateToSection = (path: string) => {
-        onClose();
-        router.push(path);
-    };
-
-    const options = [
-        { label: "Wizyta domowa", path: "/section/home" },
-        { label: "Wizyta online", path: "/section/online" },
-        { label: "Wizyta stacjonarna", path: "/section/stacionary" },
-    ];
-
+const DialogComponent: React.FC<DialogProps> = ({
+    open,
+    onClose,
+    title,
+    content,
+}) => {
     return (
         <Dialog open={open} onOpenChange={onClose}>
             <DialogContent
@@ -41,10 +34,11 @@ const DialogComponent: React.FC<DialogProps> = ({ open, onClose }) => {
                 <div className="w-full text-center">
                     <DialogHeader>
                         <DialogTitle className="text-lg font-semibold text-gray-800">
-                            Wybierz typ wizyty
+                            {title}
                         </DialogTitle>
                     </DialogHeader>
-                    <ul className="mt-6 space-y-4">
+                    {content}
+                    {/* <ul className="mt-6 space-y-4">
                         {options.map((option) => (
                             <li key={option.path}>
                                 <button
@@ -57,7 +51,7 @@ const DialogComponent: React.FC<DialogProps> = ({ open, onClose }) => {
                                 </button>
                             </li>
                         ))}
-                    </ul>
+                    </ul> */}
                 </div>
             </DialogContent>
         </Dialog>

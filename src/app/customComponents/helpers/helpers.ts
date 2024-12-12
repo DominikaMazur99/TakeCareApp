@@ -55,3 +55,14 @@ export const toRoman = (num: string | number): string => {
     }
     return roman;
 };
+
+export const navigateToSection = (path: string, router: any, onClose: any) => {
+    onClose();
+    router.push(path);
+};
+
+export const optionsToDialog = [
+    { label: "visits.home", path: "/section/home" },
+    { label: "visits.online", path: "/section/online" },
+    { label: "visits.stacionary", path: "/section/stacionary" },
+];

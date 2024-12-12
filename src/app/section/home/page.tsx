@@ -2,10 +2,15 @@
 
 import HomeVisitForm from "@/app/customComponents/forms/HomeVisitForm";
 import { useFields } from "@/app/customComponents/helpers/data";
-import { toRoman } from "@/app/customComponents/helpers/helpers";
+import {
+    navigateToSection,
+    optionsToDialog,
+    toRoman,
+} from "@/app/customComponents/helpers/helpers";
 import AccordionComponent from "@/app/customComponents/ui/AccordionComponent";
 import DialogComponent from "@/app/customComponents/ui/DialogComponent";
 import { useSidebar } from "@/hooks/SidebarContext";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -15,7 +20,10 @@ const HomePage: React.FC = () => {
     const [patients, setPatients] = useState([
         { id: 0, fields: patientFields },
     ]);
-    const { bookVisit, handleBookVisit } = useSidebar();
+    const { handleBookVisit, bookVisit } = useSidebar();
+    const router = useRouter();
+
+    const handleClose = () => handleBookVisit(false);
 
     // Funkcja dodająca nowego pacjenta
     const addNewPatient = () => {
@@ -66,7 +74,28 @@ const HomePage: React.FC = () => {
             </div>
             <DialogComponent
                 open={bookVisit}
-                onClose={() => handleBookVisit(false)}
+                onClose={handleClose}
+                title={`${t("choose.visits")}`}
+                content={
+                    <ul className="mt-6 space-y-4">
+                        {optionsToDialog.map((option) => (
+                            <li key={option.path}>
+                                <button
+                                    onClick={() =>
+                                        navigateToSection(
+                                            option.path,
+                                            router,
+                                            handleClose
+                                        )
+                                    }
+                                    className="w-full text-center px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md transition-all"
+                                >
+                                    {t(option.label)}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                }
             />
         </div>
     );

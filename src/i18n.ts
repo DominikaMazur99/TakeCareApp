@@ -84,6 +84,13 @@ i18n.use(initReactI18next).init({
                 "validation.minPacient": "Add at least one patient.",
                 "loading.message": "Loading...",
                 "alert.patient": "You can add 6 patients maximum!",
+                "wrong.header": "Something went wrong",
+                "wrong.span": "Try to refresh page or come back later",
+                "wrong.refresh": "Refresh",
+                "choose.visits": "Choose visit type",
+                "visits.home": "Home visit",
+                "visits.online": "Online visit",
+                "visits.stacionary": "Stacionary visit",
             },
         },
         pl: {
@@ -171,13 +178,20 @@ i18n.use(initReactI18next).init({
                 "validation.minPacient": "Dodaj co najmniej jednego pacjenta.",
                 "loading.message": "Trwa ładowanie...",
                 "alert.patient": "Możesz dodać maksymalnie 6 pacjentów!",
+                "wrong.header": "Coś poszło nie tak",
+                "wrong.span": "Spróbuj odświeżyć stronę lub wróć później",
+                "wrong.refresh": " Odśwież",
+                "choose.visits": "Wybierz typ wizyty",
+                "visits.home": "Wizyta domowa",
+                "visits.online": "Wizyta online",
+                "visits.stacionary": "Wizyta stacjonarna",
             },
         },
     },
-    lng: "pl", // Domyślny język
+    lng: "pl",
     fallbackLng: "en",
     interpolation: {
-        escapeValue: false, // React automatycznie escapuje
+        escapeValue: false,
     },
 });
 
