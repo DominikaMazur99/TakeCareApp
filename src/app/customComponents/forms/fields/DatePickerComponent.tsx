@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useFormContext, Controller } from "react-hook-form";
-import { format } from "date-fns";
+import { format, addDays, isBefore, isAfter } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -31,6 +31,18 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
 }) => {
     const { control } = useFormContext();
 
+    const today = new Date();
+    const maxDate = addDays(today, 3);
+
+    const isDateDisabled = (date: Date) => {
+        if (name.includes("birthDate")) {
+            return isAfter(date, today);
+        } else if (name === "visitDate") {
+            return isBefore(date, today) || isAfter(date, maxDate);
+        }
+        return false;
+    };
+
     return (
         <div className={`flex flex-col gap-1 ${className}`}>
             {label && (
@@ -51,7 +63,7 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
                             <Button
                                 variant={"calendar"}
                                 className={cn(
-                                    "w-full justify-start text-left text-textHover] p-0 placeholder:text-textHover",
+                                    "w-full justify-start text-left text-textHover p-0 placeholder:text-textHover",
                                     !field.value && "text-muted-foreground"
                                 )}
                             >
@@ -73,10 +85,13 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
                                         ? new Date(field.value)
                                         : undefined
                                 }
-                                onSelect={(selectedDate) => {
-                                    field.onChange(selectedDate);
+                                onSelect={(selectedDate: any) => {
+                                    if (!isDateDisabled(selectedDate)) {
+                                        field.onChange(selectedDate);
+                                    }
                                 }}
                                 initialFocus
+                                disabled={(date) => isDateDisabled(date)}
                             />
                         </PopoverContent>
                         {fieldState.error && (
