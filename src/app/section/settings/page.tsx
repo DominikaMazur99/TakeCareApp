@@ -1,7 +1,20 @@
+"use client";
+
+import DialogComponent from "@/app/customComponents/ui/DialogComponent";
+import { useSidebar } from "@/hooks/SidebarContext";
 import React from "react";
 
 const SettingsPage: React.FC = () => {
-    return <div>SettingsPage</div>;
+    const { bookVisit, handleBookVisit } = useSidebar();
+    return (
+        <>
+            <div>SettingsPage</div>;
+            <DialogComponent
+                open={bookVisit}
+                onClose={() => handleBookVisit(false)}
+            />
+        </>
+    );
 };
 
 export default SettingsPage;

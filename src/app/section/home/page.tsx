@@ -4,6 +4,8 @@ import HomeVisitForm from "@/app/customComponents/forms/HomeVisitForm";
 import { useFields } from "@/app/customComponents/helpers/data";
 import { toRoman } from "@/app/customComponents/helpers/helpers";
 import AccordionComponent from "@/app/customComponents/ui/AccordionComponent";
+import DialogComponent from "@/app/customComponents/ui/DialogComponent";
+import { useSidebar } from "@/hooks/SidebarContext";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -13,6 +15,7 @@ const HomePage: React.FC = () => {
     const [patients, setPatients] = useState([
         { id: 0, fields: patientFields },
     ]);
+    const { bookVisit, handleBookVisit } = useSidebar();
 
     // Funkcja dodająca nowego pacjenta
     const addNewPatient = () => {
@@ -61,6 +64,10 @@ const HomePage: React.FC = () => {
                     <AccordionComponent data={accordionData} />
                 </div>
             </div>
+            <DialogComponent
+                open={bookVisit}
+                onClose={() => handleBookVisit(false)}
+            />
         </div>
     );
 };

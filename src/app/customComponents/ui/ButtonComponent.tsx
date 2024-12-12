@@ -16,15 +16,18 @@ interface ButtonComponentProps {
         | "calendar";
     name: string;
     icon?: React.ReactNode;
+    onClick?: () => void;
 }
 
 const ButtonComponent: React.FC<ButtonComponentProps> = ({
     variant,
     name,
     icon,
+    onClick,
 }) => {
     return (
         <Button
+            onClick={onClick}
             variant={variant}
             icon={icon}
             className="break-words min-w-[100px] max-w-full text-center"

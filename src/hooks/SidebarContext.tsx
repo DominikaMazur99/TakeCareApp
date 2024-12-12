@@ -25,6 +25,8 @@ interface SidebarContextProps {
     loading: boolean;
     selectedLanguage: string;
     setLanguage: (lang: string) => void;
+    bookVisit: boolean;
+    handleBookVisit: (value: boolean) => void;
 }
 
 const SidebarContext = createContext<SidebarContextProps>({
@@ -42,6 +44,8 @@ const SidebarContext = createContext<SidebarContextProps>({
     loading: true,
     selectedLanguage: "pl",
     setLanguage: () => {},
+    bookVisit: false,
+    handleBookVisit: () => {},
 });
 
 export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -60,11 +64,18 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
     });
 
     const [loading, setLoading] = useState(true);
-    const [selectedLanguage, setSelectedLanguage] = useState("PL"); // Domyślny język
+    const [selectedLanguage, setSelectedLanguage] = useState("PL");
+    const [bookVisit, setBookVisit] = useState(false);
 
     const setLanguage = (lang: string) => {
         setSelectedLanguage(lang);
     };
+
+    const handleBookVisit = (value: boolean) => {
+        console.log("jestem", value);
+        setBookVisit(value);
+    };
+    console.log("book", bookVisit);
 
     useEffect(() => {
         if (pathname) {
@@ -143,6 +154,8 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
                 loading,
                 selectedLanguage,
                 setLanguage,
+                bookVisit,
+                handleBookVisit,
             }}
         >
             {children}
