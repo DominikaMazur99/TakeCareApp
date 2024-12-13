@@ -1,12 +1,7 @@
 "use client";
 
 import React, { Suspense, useEffect, useState } from "react";
-import {
-    useForm,
-    FormProvider,
-    useFieldArray,
-    useWatch,
-} from "react-hook-form";
+import { useForm, FormProvider, useFieldArray } from "react-hook-form";
 import VisitForm from "./formParts/VisitForm";
 import PacientForm from "./formParts/PacientForm";
 import { ChevronRight, X } from "lucide-react";
@@ -39,10 +34,13 @@ interface FormData {
     country: string;
     street: string;
     local: string;
+    topic: string;
     difadress: boolean;
     secondCountry?: string;
+    hoursrange: boolean;
     secondStreet?: string;
     secondLocal?: string;
+    additionalInformation?: string;
 }
 
 interface HomeVisitFormProps {
@@ -68,10 +66,13 @@ const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
             street: "",
             local: "",
             difadress: false,
+            topic: "",
+            additionalInformation: "",
+            hoursrange: false,
             pacients: [
                 {
                     id: 1,
-                    age: "",
+                    age: "adult",
                     name: "",
                     surname: "",
                     document: "pesel",
@@ -98,7 +99,6 @@ const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
 
     const handleButtonClick = () => {
         const data = getValues();
-        console.log(data);
         setFormData(data);
         setIsDialogOpen(true);
     };
@@ -185,6 +185,7 @@ const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
             ],
         });
         setValue("difadress", false);
+        setValue("hoursrange", false);
     };
 
     return (
@@ -243,22 +244,6 @@ const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
                                         {t("btn.next")}
                                     </span>
                                     <ChevronRight className="w-5 h-5" />
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        try {
-                                            formSchema.parse(getValues());
-                                            console.log("Validation passed!");
-                                        } catch (error: any) {
-                                            console.error(
-                                                "Validation errors:",
-                                                error?.errors
-                                            );
-                                        }
-                                    }}
-                                >
-                                    Test Validation
                                 </button>
                             </>
                         )}

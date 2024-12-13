@@ -17,7 +17,7 @@ const VisitForm: React.FC = () => {
     const { watch } = useFormContext();
     const showHoursRange = watch("hoursrange");
     const visitDate = watch("visitDate");
-    const fromTime = watch("From");
+    const fromTime = watch("from");
 
     useEffect(() => {
         setIsClient(true);

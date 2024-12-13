@@ -25,7 +25,7 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
     const documentType = watch(`pacients.${index}.document`);
     const peselValue = watch(`pacients.${index}.pesel`);
     const birthDate = watch(`pacients.${index}.birthDate`);
-    const secondAddress = watch(`pacients.${index}.difadress`);
+    const secondAddress = watch(`difadress`);
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
@@ -201,7 +201,7 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                         <SelectComponent
                             id={`visit-country-2`}
                             name={`visit.secondCountry`}
-                            placeholder={t("country")}
+                            placeholder={t("patient.country")}
                             options={options.countries || []}
                         />
                     )}

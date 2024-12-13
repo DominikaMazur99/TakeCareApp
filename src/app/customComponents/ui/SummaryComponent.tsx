@@ -13,6 +13,8 @@ const SummaryComponent = (data: any) => {
         country,
         from,
         to,
+        secondLocal,
+        secondStreet,
     } = data.data;
     const { t } = useTranslation();
     const formattedDate =
@@ -47,6 +49,12 @@ const SummaryComponent = (data: any) => {
             <div>
                 <strong>{t("patient.country")}:</strong> {country || "-"}
             </div>
+            {secondLocal && secondStreet && (
+                <div>
+                    <strong>{t("visit.address.label")} (2):</strong>{" "}
+                    {`${secondStreet} ${secondLocal}`}
+                </div>
+            )}
 
             <h3 className="text-lg  underline">
                 {t("pacients.section.label")}
