@@ -79,7 +79,7 @@ const VisitForm: React.FC = () => {
                     <SelectComponent
                         key="specialization"
                         id="specialization"
-                        name="Specialization"
+                        name="specialization"
                         label={t("visit.specialization")}
                         placeholder={t("visit.specialization.placeholder")}
                         rules={{ required: t("field.required") }}
@@ -110,7 +110,7 @@ const VisitForm: React.FC = () => {
                                     <SelectComponent
                                         key="from"
                                         id="from"
-                                        name="From"
+                                        name="from"
                                         placeholder={t("visit.hours.from")}
                                         options={generateFromOptions()}
                                     />
@@ -119,7 +119,7 @@ const VisitForm: React.FC = () => {
                                     <SelectComponent
                                         key="to"
                                         id="to"
-                                        name="To"
+                                        name="to"
                                         placeholder={t("visit.hours.to")}
                                         options={generateToOptions()}
                                     />
@@ -133,7 +133,7 @@ const VisitForm: React.FC = () => {
                 <SelectComponent
                     key="topic"
                     id="topic"
-                    name="Topic"
+                    name="topic"
                     label={t("visit.topic")}
                     placeholder={t("visit.topic.placeholder")}
                     options={options.topics || []}
@@ -141,7 +141,7 @@ const VisitForm: React.FC = () => {
             )}
             <TextareaComponent
                 id="additional"
-                name="Additional Information"
+                name="additionalInformation"
                 label={t("visit.additionalInfo")}
                 placeholder={t("visit.additionalInfo.placeholder")}
             />
@@ -149,7 +149,7 @@ const VisitForm: React.FC = () => {
                 <SelectComponent
                     key="language"
                     id="language"
-                    name="Language"
+                    name="language"
                     label={t("visit.language")}
                     placeholder={t("list.placeholder")}
                     options={options.languages || []}

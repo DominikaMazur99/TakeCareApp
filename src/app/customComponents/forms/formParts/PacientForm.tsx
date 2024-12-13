@@ -108,8 +108,17 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                     name={`pacients.${index}.symptoms`}
                     label={t("patient.symptoms.label")}
                     options={options.symptoms || []}
+                    value={watch(`pacients.${index}.symptoms`)} // Przypisujemy obecne label
+                    onChange={
+                        (selectedLabels) =>
+                            setValue(
+                                `pacients.${index}.symptoms`,
+                                selectedLabels
+                            ) // Zapisujemy wybrane label
+                    }
                 />
             )}
+
             <RadioButtonsInOne
                 name={`pacients.${index}.document`}
                 label={t("document.type")}
@@ -152,8 +161,8 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                         </label>
                         {isClient && (
                             <SelectComponent
-                                id={`pacients-${index}-country`}
-                                name={`pacients.${index}.country`}
+                                id={`visit-country`}
+                                name={`country`}
                                 placeholder={t("patient.country")}
                                 options={options.countries || []}
                             />
@@ -161,8 +170,8 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                         <div className="flex items-center gap-4 w-full">
                             <div className="w-1/2">
                                 <InputComponent
-                                    id={`pacients-${index}-street`}
-                                    name={`pacients.${index}.street`}
+                                    id={`visit-street`}
+                                    name={`street`}
                                     placeholder={t(
                                         "patient.street.placeholder"
                                     )}
@@ -170,15 +179,15 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                             </div>
                             <div className="w-1/2">
                                 <InputComponent
-                                    id={`pacients-${index}-local`}
-                                    name={`pacients.${index}.local`}
+                                    id={`visit-local`}
+                                    name={`local`}
                                     placeholder={t("patient.local.placeholder")}
                                 />
                             </div>
                         </div>
                     </div>
                     <CheckboxComponent
-                        name={`pacients.${index}.difadress`}
+                        name={`difadress`}
                         label={t("visit.differentAddress.label")}
                     />
                 </>
@@ -190,21 +199,21 @@ const PacientForm: React.FC<PacientFormProps> = ({ index }) => {
                     </label>
                     {isClient && (
                         <SelectComponent
-                            id={`pacients-${index}-country-2`}
-                            name={`pacients.${index}.secondCountry`}
-                            placeholder={t("patient.country")}
+                            id={`visit-country-2`}
+                            name={`visit.secondCountry`}
+                            placeholder={t("country")}
                             options={options.countries || []}
                         />
                     )}
                     <div className="flex items-center gap-4 w-full">
                         <InputComponent
-                            id={`pacients-${index}-street-2`}
-                            name={`pacients.${index}.secondStreet`}
+                            id={`visit-street-2`}
+                            name={`secondStreet`}
                             placeholder={t("patient.street.placeholder")}
                         />
                         <InputComponent
-                            id={`pacients-${index}-local-2`}
-                            name={`pacients.${index}.secondLocal`}
+                            id={`visit-local-2`}
+                            name={`secondLocal`}
                             placeholder={t("patient.local.placeholder")}
                         />
                     </div>

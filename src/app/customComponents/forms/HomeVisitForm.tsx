@@ -1,7 +1,12 @@
 "use client";
 
 import React, { Suspense, useEffect, useState } from "react";
-import { useForm, FormProvider, useFieldArray } from "react-hook-form";
+import {
+    useForm,
+    FormProvider,
+    useFieldArray,
+    useWatch,
+} from "react-hook-form";
 import VisitForm from "./formParts/VisitForm";
 import PacientForm from "./formParts/PacientForm";
 import { ChevronRight, X } from "lucide-react";
@@ -11,6 +16,8 @@ import { useSidebar } from "@/hooks/SidebarContext";
 import { useTranslation } from "react-i18next";
 import LoadingComponent from "../ui/LoadingComponent";
 import AlertComponent from "../ui/AlertComponent";
+import DialogComponent from "../ui/DialogComponent";
+import SummaryComponent from "../ui/SummaryComponent";
 
 interface Pacient {
     id: number;
@@ -20,14 +27,7 @@ interface Pacient {
     document: string;
     pesel: string;
     passport: string;
-    country: string;
-    street: string;
-    local: string;
     symptoms: any[];
-    difadress: boolean;
-    secondCountry?: string;
-    secondStreet?: string;
-    secondLocal?: string;
 }
 
 interface FormData {
@@ -36,6 +36,13 @@ interface FormData {
     specialization: string;
     visitDate: string;
     pacients: Pacient[];
+    country: string;
+    street: string;
+    local: string;
+    difadress: boolean;
+    secondCountry?: string;
+    secondStreet?: string;
+    secondLocal?: string;
 }
 
 interface HomeVisitFormProps {
@@ -51,12 +58,16 @@ const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
 
     const methods = useForm<FormData>({
         resolver: zodResolver(formSchema),
-        mode: "onBlur",
+        mode: "onChange",
         defaultValues: {
             numberOfIssue: "",
             visitType: "",
             specialization: "",
             visitDate: "",
+            country: "Polska",
+            street: "",
+            local: "",
+            difadress: false,
             pacients: [
                 {
                     id: 1,
@@ -66,24 +77,41 @@ const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
                     document: "pesel",
                     pesel: "",
                     passport: "",
-                    country: "",
-                    street: "",
-                    local: "",
                     symptoms: [],
-                    difadress: false,
                 },
             ],
         },
     });
 
-    const { control, handleSubmit, setValue } = methods;
+    const { control, handleSubmit, setValue, getValues, formState, reset } =
+        methods;
     const { fields, append, remove } = useFieldArray({
         control,
         name: "pacients",
     });
 
+    const isFormValid = formState.isValid;
+
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isSubmited, setIsSubmited] = useState(false);
+    const [formData, setFormData] = useState({});
+
+    const handleButtonClick = () => {
+        const data = getValues();
+        console.log(data);
+        setFormData(data);
+        setIsDialogOpen(true);
+    };
+
     const onSubmit = (data: FormData) => {
-        console.log("Submit data:", data);
+        try {
+            formSchema.parse(data);
+            setIsSubmited(true);
+            setIsDialogOpen(false);
+            console.log("Validation passed!");
+        } catch (error: any) {
+            console.error("Validation errors:", error.errors);
+        }
     };
 
     const handleAddPacient = () => {
@@ -97,11 +125,7 @@ const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
                 document: "pesel",
                 pesel: "",
                 passport: "",
-                country: "",
-                street: "",
-                local: "",
                 symptoms: [],
-                difadress: false,
             });
 
             updateAccordion(newIndex);
@@ -122,11 +146,46 @@ const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
     }, [selectedSection, setValue]);
 
     useEffect(() => {
+        if (formState.isValid) {
+            methods.clearErrors();
+        }
+    }, [formState.isValid, methods]);
+
+    useEffect(() => {
         const timeout = setTimeout(() => {
             setFormsLoaded(true);
         }, 300);
         return () => clearTimeout(timeout);
     }, [fields]);
+
+    const simulatedSubmit = () => {
+        setIsSubmited(true);
+        setIsDialogOpen(false);
+
+        reset({
+            numberOfIssue: "",
+            visitType: "",
+            specialization: "",
+            visitDate: "",
+            country: "Polska",
+            street: "",
+            local: "",
+            difadress: false,
+            pacients: [
+                {
+                    id: 1,
+                    age: "",
+                    name: "",
+                    surname: "",
+                    document: "pesel",
+                    pesel: "",
+                    passport: "",
+                    symptoms: [],
+                },
+            ],
+        });
+        setValue("difadress", false);
+    };
 
     return (
         <>
@@ -134,7 +193,7 @@ const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
                 {formsLoaded ? (
                     <form
                         onSubmit={handleSubmit(onSubmit)}
-                        className="border border-gray-300 rounded-md p-10 gap-6 flex flex-col bg-white w-full h-full relative"
+                        className="border border-gray-300 rounded-md p-10 gap-6 flex flex-col bg-white w-full h-full"
                     >
                         <Suspense fallback={<LoadingComponent />}>
                             <VisitForm />
@@ -171,13 +230,35 @@ const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
                                 </button>
 
                                 <button
-                                    type="submit"
-                                    className="flex items-center justify-center bg-blue-500 border-blue-500 border-[1px] text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-all"
+                                    type="button"
+                                    disabled={!isFormValid} // Użycie isFormValid
+                                    onClick={handleButtonClick}
+                                    className={`flex items-center justify-center px-6 py-2 rounded-md transition-all ${
+                                        isFormValid
+                                            ? "bg-blue-500 border-blue-500 text-white hover:bg-blue-600"
+                                            : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
+                                    }`}
                                 >
                                     <span className="mr-2">
                                         {t("btn.next")}
                                     </span>
                                     <ChevronRight className="w-5 h-5" />
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        try {
+                                            formSchema.parse(getValues());
+                                            console.log("Validation passed!");
+                                        } catch (error: any) {
+                                            console.error(
+                                                "Validation errors:",
+                                                error?.errors
+                                            );
+                                        }
+                                    }}
+                                >
+                                    Test Validation
                                 </button>
                             </>
                         )}
@@ -192,6 +273,33 @@ const HomeVisitForm: React.FC<HomeVisitFormProps> = ({ updateAccordion }) => {
                 duration={3000}
                 isOpen={showAlert}
                 onClose={() => setShowAlert(false)}
+            />
+            <AlertComponent
+                message={t("form.submitted")}
+                type="success"
+                duration={3000}
+                isOpen={isSubmited}
+                onClose={() => setIsSubmited(false)}
+            />
+            <DialogComponent
+                open={isDialogOpen}
+                onClose={() => setIsDialogOpen(false)}
+                title={t("form.summary")}
+                content={
+                    <>
+                        <SummaryComponent data={formData} />
+                        <div className="my-6" />
+                        <div className="flex justify-center">
+                            <button
+                                type="button"
+                                onClick={simulatedSubmit}
+                                className="flex items-center justify-center bg-blue-500 border-blue-500 border-[1px] text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-all disabled:bg-gray-300 disabled:cursor-not-allowed"
+                            >
+                                <span className="mr-2">{t("btn.submit")}</span>
+                            </button>
+                        </div>
+                    </>
+                }
             />
         </>
     );

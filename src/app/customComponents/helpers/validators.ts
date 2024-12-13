@@ -25,56 +25,70 @@ export const createFormSchema = (t: (key: string) => string) => {
         .regex(/^[A-Z]{3}[0-9]{6}$/, {
             message: t("validation.idCard.format"),
         })
-        .refine(
-            (value) => {
-                const weights = [7, 3, 1, 7, 3, 1, 7, 3, 1];
-                const characters = value.split("");
-                const sum = characters.reduce((acc, char, index) => {
-                    const charValue =
-                        index < 3
-                            ? char.charCodeAt(0) - 55 // A=10, ..., Z=35
-                            : parseInt(char, 10); // Digits
-                    return acc + weights[index] * charValue;
-                }, 0);
-                return sum % 10 === 0;
-            },
-            { message: t("validation.idCard.checksum") }
-        );
+        .or(z.literal(""))
+        .optional();
 
-    const pacientSchema = z.object({
-        id: z.number(),
-        age: z.enum(["adult", "child"], {
-            message: t("validation.required"),
-        }),
-        name: z.string().min(1, { message: t("validation.required") }),
-        surname: z.string().min(1, { message: t("validation.required") }),
-        document: z.enum(["pesel", "passport"], {
-            message: t("validation.required"),
-        }),
-        pesel: peselSchema.optional(),
-        passport: idCardSchema.optional(),
-        birthDate: z
-            .string()
-            .optional()
-            .refine(
-                (date) => {
-                    if (!date) return true;
-                    const parsedDate = new Date(date);
-                    return parsedDate <= new Date();
-                },
-                {
-                    message: t("validation.birthDate"),
+    const pacientSchema = z
+        .object({
+            id: z.number(),
+            age: z.enum(["adult", "child"], {
+                message: t("validation.required"),
+            }),
+            name: z.string().min(1, { message: t("validation.required") }),
+            surname: z.string().min(1, { message: t("validation.required") }),
+            document: z.enum(["pesel", "passport"], {
+                message: t("validation.required"),
+            }),
+            pesel: z.union([peselSchema, z.literal("")]).optional(),
+            passport: z.union([idCardSchema, z.literal("")]).optional(),
+            birthDate: z
+                .string()
+                .optional()
+                .refine(
+                    (date) => {
+                        if (!date) return true;
+                        const parsedDate = new Date(date);
+                        return parsedDate <= new Date();
+                    },
+                    {
+                        message: t("validation.birthDate"),
+                    }
+                ),
+            symptoms: z.array(z.string()).optional(),
+        })
+        .superRefine((data, ctx) => {
+            if (data.document === "pesel") {
+                if (!data.pesel || data.pesel === "") {
+                    ctx.addIssue({
+                        code: "custom",
+                        path: ["pesel"],
+                        message: t("validation.requiredPesel"),
+                    });
                 }
-            ),
-        country: z.string().min(1, { message: t("validation.required") }),
-        street: z.string().optional(),
-        local: z.string().optional(),
-        symptoms: z.array(z.string()).optional(),
-        difadress: z.boolean(),
-        secondCountry: z.string().optional(),
-        secondStreet: z.string().optional(),
-        secondLocal: z.string().optional(),
-    });
+                if (data.passport && data.passport !== "") {
+                    ctx.addIssue({
+                        code: "custom",
+                        path: ["passport"],
+                        message: t("validation.notRequiredPassport"),
+                    });
+                }
+            } else if (data.document === "passport") {
+                if (!data.passport || data.passport === "") {
+                    ctx.addIssue({
+                        code: "custom",
+                        path: ["passport"],
+                        message: t("validation.requiredPassport"),
+                    });
+                }
+                if (data.pesel && data.pesel !== "") {
+                    ctx.addIssue({
+                        code: "custom",
+                        path: ["pesel"],
+                        message: t("validation.notRequiredPesel"),
+                    });
+                }
+            }
+        });
 
     return z
         .object({
@@ -87,7 +101,7 @@ export const createFormSchema = (t: (key: string) => string) => {
                 .min(1, { message: t("validation.required") }),
             visitDate: z.string().refine(
                 (date) => {
-                    if (!date) return false; // Required validation
+                    if (!date) return false;
                     const today = new Date();
                     const parsedDate = new Date(date);
                     const maxDate = new Date();
@@ -97,6 +111,9 @@ export const createFormSchema = (t: (key: string) => string) => {
                 },
                 { message: t("validation.visitDateRange") }
             ),
+            country: z.string().min(1, { message: t("validation.required") }),
+            street: z.string().min(1, { message: t("validation.required") }),
+            local: z.string().min(1, { message: t("validation.required") }),
             hoursrange: z.boolean().optional(),
             from: z.string().optional(),
             to: z.string().optional(),

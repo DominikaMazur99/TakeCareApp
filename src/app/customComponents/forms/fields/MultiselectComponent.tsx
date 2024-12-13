@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import React from "react";
 import Select from "react-select";
+import { useTranslation } from "react-i18next";
 
 interface MultiSelectProps {
     id?: string;
     name?: string;
     label?: string;
     placeholder?: string;
-    options: any[];
+    options: any;
     className?: string;
-    onChange?: (selected: { label: string; value: string | number }[]) => void;
+    value?: string[]; // Teraz będzie to tablica stringów (labeli)
+    onChange?: (selected: string[]) => void; // Zwracamy tablicę stringów
 }
 
 const MultiSelectComponent: React.FC<MultiSelectProps> = ({
@@ -19,12 +20,17 @@ const MultiSelectComponent: React.FC<MultiSelectProps> = ({
     placeholder = "list.placeholder",
     options,
     className = "",
+    value = [],
     onChange,
 }) => {
     const { t } = useTranslation();
+
     const handleChange = (selectedOptions: any) => {
         if (onChange) {
-            onChange(selectedOptions || []);
+            const selectedLabels = selectedOptions.map(
+                (option: { label: string }) => option.label
+            );
+            onChange(selectedLabels); // Zwracamy tablicę labeli
         }
     };
 
@@ -37,7 +43,7 @@ const MultiSelectComponent: React.FC<MultiSelectProps> = ({
             backgroundColor: "transparent",
             boxShadow: "none",
             padding: "0.25rem 0",
-            color: "#6b7280", // textHover color
+            color: "#6b7280",
             ...(state.isFocused && {
                 borderBottom: "1px solid #2563eb",
             }),
@@ -47,27 +53,27 @@ const MultiSelectComponent: React.FC<MultiSelectProps> = ({
         }),
         option: (provided: any, state: any) => ({
             ...provided,
-            backgroundColor: state.isFocused ? "#e0f2fe" : "white", // Light blue on focus
-            color: state.isSelected ? "white" : "#1f2937", // White text when selected
+            backgroundColor: state.isFocused ? "#e0f2fe" : "white",
+            color: state.isSelected ? "white" : "#1f2937",
             "&:hover": {
-                backgroundColor: "#93c5fd", // Blue on hover
+                backgroundColor: "#93c5fd",
                 color: "white",
             },
         }),
         multiValue: (provided: any) => ({
             ...provided,
-            backgroundColor: "#dbeafe", // Light blue chip background
-            color: "#1f2937", // Dark gray text
+            backgroundColor: "#dbeafe",
+            color: "#1f2937",
         }),
         multiValueLabel: (provided: any) => ({
             ...provided,
-            color: "#1f2937", // Dark gray text
+            color: "#1f2937",
         }),
         multiValueRemove: (provided: any) => ({
             ...provided,
-            color: "#1f2937", // Dark gray text for "x"
+            color: "#1f2937",
             "&:hover": {
-                backgroundColor: "#93c5fd", // Blue hover for "x"
+                backgroundColor: "#93c5fd",
                 color: "white",
             },
         }),
@@ -89,8 +95,13 @@ const MultiSelectComponent: React.FC<MultiSelectProps> = ({
                 isMulti
                 options={options || []}
                 placeholder={t(placeholder)}
-                onChange={handleChange}
-                styles={customStyles} // Apply custom styles
+                value={
+                    options.filter((option: any) =>
+                        value.includes(option.label)
+                    ) // Dopasowujemy zaznaczone label
+                }
+                onChange={handleChange} // Obsługa zmiany z mapowaniem na label
+                styles={customStyles}
             />
         </div>
     );

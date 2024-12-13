@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Select from "react-select";
 import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -86,12 +86,12 @@ const SelectComponent: React.FC<SelectProps> = ({
                             value={
                                 options?.find(
                                     (option: any) =>
-                                        option.value === field.value
+                                        option.label === field.value
                                 ) || null
                             }
                             onChange={(selectedOption) =>
                                 field.onChange(
-                                    selectedOption ? selectedOption.value : ""
+                                    selectedOption ? selectedOption.label : ""
                                 )
                             }
                             styles={customStyles}

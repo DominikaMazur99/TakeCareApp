@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import { format, addDays, isBefore, isAfter } from "date-fns";
@@ -85,9 +83,14 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
                                         ? new Date(field.value)
                                         : undefined
                                 }
-                                onSelect={(selectedDate: any) => {
-                                    if (!isDateDisabled(selectedDate)) {
-                                        field.onChange(selectedDate);
+                                onSelect={(selectedDate: Date | undefined) => {
+                                    if (
+                                        selectedDate &&
+                                        !isDateDisabled(selectedDate)
+                                    ) {
+                                        field.onChange(
+                                            format(selectedDate, "yyyy-MM-dd") // Format the date as a string
+                                        );
                                     }
                                 }}
                                 initialFocus
